@@ -895,3 +895,26 @@ p { color: var(--text-light); }
     height: 150px; 
   }
 }
+
+/* ===== YT CHANNEL BADGE ===== */
+.yt-channel-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #ff0000;
+  background: rgba(255, 0, 0, 0.08);
+  padding: 0.35rem 1rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 0, 0, 0.15);
+  transition: var(--transition);
+  margin-top: 0.75rem;
+}
+.yt-channel-link:hover {
+  background: #ff0000;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
+}

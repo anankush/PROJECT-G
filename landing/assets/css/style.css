@@ -26,18 +26,18 @@
   padding: 0;
 }
 
-html {
+html, body {
   scroll-behavior: smooth;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: var(--text-dark);
   background-color: var(--bg-color);
   line-height: 1.6;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
   position: relative;
-  overflow-x: hidden;
-  background-color: var(--bg-color);
 }
 
 a {
@@ -853,9 +853,17 @@ p { color: var(--text-light); }
   .details-info {
     padding: 1.5rem;
     border-radius: 20px;
+    text-align: center;
   }
   .details-info h1 {
     font-size: 2rem;
+  }
+  .glass-form-group {
+    text-align: left; /* Keep the select label readable but container centered */
+  }
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
   }
   
   .trust-info .container {

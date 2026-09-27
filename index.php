@@ -37,7 +37,7 @@ shuffle($bgImages);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="landing/assets/css/style.css?v=1.6">
+    <link rel="stylesheet" href="landing/assets/css/style.css?v=1.7">
 </head>
 <body>
 
@@ -256,6 +256,6 @@ shuffle($bgImages);
     </footer>
 
     <!-- Custom JS -->
-    <script src="landing/assets/js/main.js?v=1.6"></script>
+    <script src="landing/assets/js/main.js?v=1.7"></script>
 </body>
 </html>

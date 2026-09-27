@@ -45,7 +45,7 @@ function getTrackHtml($images) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="landing/assets/css/style.css?v=1.9">
+    <link rel="stylesheet" href="landing/assets/css/style.css?v=2.0">
 </head>
 <body>
 
@@ -258,6 +258,6 @@ function getTrackHtml($images) {
     </footer>
 
     <!-- Custom JS -->
-    <script src="landing/assets/js/main.js?v=1.9"></script>
+    <script src="landing/assets/js/main.js?v=2.0"></script>
 </body>
 </html>

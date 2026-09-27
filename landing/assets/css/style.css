@@ -68,22 +68,23 @@ img {
   flex-direction: column;
   align-items: flex-start; /* THIS FIXES THE GAP: Start tracks from the far left */
   justify-content: center;
-  gap: 8rem; /* Vertical spacing between tracks */
+  gap: 3.5rem; /* Reduced vertical gap between tracks */
   /* Rotation will be applied via JS to ensure random diagonals */
 }
 
 .bg-marquee-track {
   display: flex;
-  gap: 4rem; /* Safe, distinct gap to ensure no overlap */
+  gap: 2rem; /* Reduced horizontal gap between cards */
   width: max-content;
   will-change: transform;
-  animation: bgMarqueeScroll 30s linear infinite; /* Slightly faster animation */
+  animation: bgMarqueeScroll 45s linear infinite; /* Slowed down animation */
 }
 
 .floating-bg-card {
-  width: 450px; /* Massive size */
-  height: auto;
-  object-fit: contain;
+  width: 360px;  /* Exact fixed width for all cards */
+  height: 225px; /* Exact fixed height to make every card identically sized */
+  object-fit: cover; /* Forces the image to fill the exact size without distorting */
+  background: rgba(255, 255, 255, 0.2); /* Soft background in case of transparent images */
   opacity: 0.25;
   border-radius: 20px;
   filter: grayscale(10%) blur(4px);
@@ -877,11 +878,16 @@ p { color: var(--text-light); }
     gap: 2rem;
   }
   
-  /* Ensure continuous track visibility on mobile */
+  /* Ensure continuous track visibility and exact sizes on mobile */
   .floating-bg-container {
     width: 200vw;
+    gap: 2rem; /* Even tighter vertical gap on mobile */
+  }
+  .bg-marquee-track {
+    gap: 1.5rem; /* Tighter horizontal gap on mobile */
   }
   .floating-bg-card {
-    width: 300px; /* Big size for mobile too */
+    width: 240px; 
+    height: 150px; 
   }
 }

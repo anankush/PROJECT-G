@@ -54,7 +54,7 @@ function getTrackHtml($images) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css?v=1.9">
+    <link rel="stylesheet" href="assets/css/style.css?v=2.0">
 </head>
 <body>
 
@@ -185,7 +185,7 @@ function getTrackHtml($images) {
         </div>
     </footer>
 
-    <script src="assets/js/main.js?v=1.9"></script>
+    <script src="assets/js/main.js?v=2.0"></script>
     <script>
         // Logic to show "Sell Now" button only after a value is selected
         document.addEventListener('DOMContentLoaded', function() {

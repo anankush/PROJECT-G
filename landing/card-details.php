@@ -122,7 +122,7 @@ function getTrackHtml($images) {
                     <!-- Right: Info & Actions -->
                     <div class="details-info">
                         <h1><?= htmlspecialchars($card['brand_name']) ?></h1>
-                        <p class="desc">Sell your <?= htmlspecialchars($card['brand_name']) ?> gift card safely and securely. Please select your card's denomination to proceed.</p>
+                        <p class="desc">Buy or sell your <?= htmlspecialchars($card['brand_name']) ?> gift card safely and securely. Please select your card's denomination to proceed.</p>
 
                         <!-- Denomination / Value Selection -->
                         <div class="glass-form-group">
@@ -150,10 +150,10 @@ function getTrackHtml($images) {
                         <div class="action-buttons">
                             <?php if ($isLoggedIn): ?>
                                 <!-- User is logged in: Proceed to sell directly -->
-                                <button type="button" id="sellNowBtn" class="btn btn-primary" onclick="proceedToSell()" style="display: none;">Sell Now</button>
+                                <button type="button" id="buyNowBtn" class="btn btn-primary" onclick="proceedToTrade('buy')" style="display: none;">Buy Now</button><button type="button" id="sellNowBtn" class="btn btn-outline" onclick="proceedToTrade('sell')" style="display: none;">Sell Now</button>
                             <?php else: ?>
                                 <!-- User is NOT logged in: Show Signup Modal -->
-                                <button type="button" id="sellNowBtn" class="btn btn-primary" onclick="openSignupModal()" style="display: none;">Sell Now</button>
+                                <button type="button" id="buyNowBtn" class="btn btn-primary" onclick="openSignupModal('buy')" style="display: none;">Buy Now</button><button type="button" id="sellNowBtn" class="btn btn-outline" onclick="openSignupModal('sell')" style="display: none;">Sell Now</button>
                             <?php endif; ?>
                             
                             <a href="../index.php" class="btn btn-outline">Go Back</a>
@@ -194,14 +194,14 @@ function getTrackHtml($images) {
         // Logic to show "Sell Now" button only after a value is selected
         document.addEventListener('DOMContentLoaded', function() {
             const selectElement = document.getElementById('denomination');
-            const sellBtn = document.getElementById('sellNowBtn');
+            const sellBtn = document.getElementById('sellNowBtn'); const buyBtn = document.getElementById('buyNowBtn');
             
             if (selectElement && sellBtn) {
                 selectElement.addEventListener('change', function() {
                     if (this.value !== "") {
-                        sellBtn.style.display = 'inline-flex';
+                        sellBtn.style.display = 'inline-flex'; buyBtn.style.display = 'inline-flex';
                     } else {
-                        sellBtn.style.display = 'none';
+                        sellBtn.style.display = 'none'; buyBtn.style.display = 'none';
                     }
                 });
             }
@@ -218,7 +218,7 @@ function getTrackHtml($images) {
             document.getElementById('signup-modal').classList.add('active');
         }
 
-        function proceedToSell() {
+        function proceedToTrade(action) {
             const select = document.getElementById('denomination');
             if (select && select.value === "") {
                 alert("Please select a card value first.");

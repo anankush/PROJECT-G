@@ -37,7 +37,7 @@ function getTrackHtml($images) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#f4f7fb">
-    <title>Roshan Ka Tech | Sell Your Gift Cards</title>
+    <title>Roshan Ka Tech | Buy & Sell Gift Cards</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,10 +91,10 @@ function getTrackHtml($images) {
     <!-- Hero Section -->
     <section class="hero">
         <div class="container hero-content reveal">
-            <h1>Sell Your Gift Cards.<br>Get Paid Easily.</h1>
-            <p>Turn your unused gift cards into real money with Roshan Ka Tech. Fast, secure, and hassle-free.</p>
+            <h1>Buy & Sell Gift Cards.<br>Fast & Secure.</h1>
+            <p>Buy premium gift cards at great rates or turn your unused gift cards into real money with Roshan Ka Tech.</p>
             <div class="hero-cta">
-                <a href="#gift-cards" class="btn btn-primary">Sell Your Gift Card</a>
+                <a href="#gift-cards" class="btn btn-primary">Start Trading</a>
                 <a href="#how-it-works" class="btn btn-outline">How It Works</a>
             </div>
         </div>
@@ -104,8 +104,8 @@ function getTrackHtml($images) {
     <section id="gift-cards" class="section gift-cards">
         <div class="container">
             <div class="text-center reveal">
-                <h2>Gift Cards We Buy</h2>
-                <p>Select your gift card brand below to begin the selling process.</p>
+                <h2>Trade Gift Cards</h2>
+                <p>Select your gift card brand below to buy or sell.</p>
             </div>
             
             <div class="cards-grid reveal">
@@ -127,7 +127,7 @@ function getTrackHtml($images) {
                             </div>
                             <h3><?= htmlspecialchars($card['brand_name']) ?></h3>
                             
-                            <a href="landing/card-details.php?id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary" style="margin-top: 1rem;">View Details & Sell</a>
+                            <a href="landing/card-details.php?id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary" style="margin-top: 1rem;">Buy / Sell Options</a>
                         </div>
                     <?php endforeach; ?>
 
@@ -141,24 +141,24 @@ function getTrackHtml($images) {
         <div class="container">
             <div class="text-center reveal">
                 <h2>How It Works</h2>
-                <p>Three simple steps to convert your gift cards to cash.</p>
+                <p>Three simple steps to buy or sell your gift cards.</p>
             </div>
             
             <div class="steps-grid reveal">
                 <div class="step">
                     <span class="step-number">01</span>
                     <h3>Choose Your Gift Card</h3>
-                    <p>Select the brand of the gift card you want to sell from our supported list.</p>
+                    <p>Select the brand of the gift card you want to trade from our supported list.</p>
                 </div>
                 <div class="step">
                     <span class="step-number">02</span>
-                    <h3>Submit For Verification</h3>
-                    <p>Provide your gift card details securely. We quickly verify the card balance.</p>
+                    <h3>Buy or Sell</h3>
+                    <p>Choose whether to purchase a new card or sell your existing one securely.</p>
                 </div>
                 <div class="step">
                     <span class="step-number">03</span>
-                    <h3>Get Paid</h3>
-                    <p>Receive your payment easily once the verification is completed.</p>
+                    <h3>Complete Transaction</h3>
+                    <p>Get your card details instantly or receive payment for your sale.</p>
                 </div>
             </div>
         </div>
@@ -223,8 +223,8 @@ function getTrackHtml($images) {
     <section class="trust-info">
         <div class="container reveal">
             <h2>Ready to Trade?</h2>
-            <p class="mt-4 mb-8">Submit your gift cards for verification today and receive your payment directly once approved. We maintain a secure environment to ensure your trades go smoothly.</p>
-            <a href="#gift-cards" class="btn btn-primary">Start Selling</a>
+            <p class="mt-4 mb-8">Buy premium gift cards instantly or submit your unused cards for quick payment. We maintain a secure environment to ensure your trades go smoothly.</p>
+            <a href="#gift-cards" class="btn btn-primary">Start Trading</a>
         </div>
     </section>
 
@@ -234,14 +234,14 @@ function getTrackHtml($images) {
             <div class="footer-grid">
                 <div>
                     <h3 class="mb-4">Roshan Ka Tech</h3>
-                    <p>Your trusted platform to securely sell unused gift cards.</p>
+                    <p>Your trusted platform to securely buy and sell gift cards.</p>
                 </div>
                 
                 <div>
                     <h3 class="mb-4">Navigation</h3>
                     <ul class="footer-links">
                         <li><a href="#how-it-works">How It Works</a></li>
-                        <li><a href="#gift-cards">Sell Gift Cards</a></li>
+                        <li><a href="#gift-cards">Buy / Sell Gift Cards</a></li>
                         <li><a href="#why-us">Why Us</a></li>
                     </ul>
                 </div>

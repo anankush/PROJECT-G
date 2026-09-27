@@ -1,8 +1,8 @@
 /* ===== CSS VARIABLES - GLASSMORPHISM THEME ===== */
 :root {
   /* Colors */
-  --primary-color: #0062ff; /* Vibrant elegant blue */
-  --primary-hover: #004ecc;
+  --primary-color: #2563eb; /* Softer elegant blue */
+  --primary-hover: #1d4ed8;
   --text-dark: #1e293b;
   --text-light: #475569;
   --bg-color: #f4f7fb; /* Very soft light blue/grey base */
@@ -11,8 +11,8 @@
   --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-bg-hover: rgba(255, 255, 255, 0.85);
   --glass-border: 1px solid rgba(255, 255, 255, 0.7);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 98, 255, 0.05);
-  --glass-shadow-hover: 0 16px 40px 0 rgba(0, 98, 255, 0.12);
+  --glass-shadow: 0 8px 32px 0 rgba(37, 99, 235, 0.05);
+  --glass-shadow-hover: 0 16px 40px 0 rgba(37, 99, 235, 0.12);
   --glass-blur: blur(16px);
   
   --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -110,7 +110,7 @@ img {
   left: -10%;
   width: 500px;
   height: 500px;
-  background: rgba(0, 98, 255, 0.2);
+  background: rgba(37, 99, 235, 0.2);
 }
 
 .shape-2 {
@@ -194,12 +194,12 @@ p { color: var(--text-light); }
 .btn-primary {
   background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
   color: white;
-  box-shadow: 0 4px 15px rgba(0, 98, 255, 0.25);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 98, 255, 0.35);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.35);
 }
 
 .btn-outline {
@@ -207,12 +207,12 @@ p { color: var(--text-light); }
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: var(--primary-color);
-  border: 1px solid rgba(0, 98, 255, 0.2);
+  border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
 .btn-outline:hover {
   background: rgba(255, 255, 255, 0.7);
-  border-color: rgba(0, 98, 255, 0.4);
+  border-color: rgba(37, 99, 235, 0.4);
   transform: translateY(-2px);
 }
 
@@ -398,7 +398,7 @@ p { color: var(--text-light); }
   grid-column: 1 / -1;
   padding: 4rem 2rem;
   text-align: center;
-  border: 1px dashed rgba(0, 98, 255, 0.3);
+  border: 1px dashed rgba(37, 99, 235, 0.3);
 }
 
 .empty-state h3 {
@@ -445,7 +445,7 @@ p { color: var(--text-light); }
 .step-number {
   font-size: 4rem;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--primary-color), rgba(0, 98, 255, 0.1));
+  background: linear-gradient(135deg, var(--primary-color), rgba(37, 99, 235, 0.1));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   opacity: 0.15;
@@ -484,7 +484,7 @@ p { color: var(--text-light); }
 .feature-icon {
   width: 64px;
   height: 64px;
-  background: rgba(0, 98, 255, 0.08);
+  background: rgba(37, 99, 235, 0.08);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -495,7 +495,7 @@ p { color: var(--text-light); }
 }
 
 .feature-item:hover .feature-icon {
-  background: rgba(0, 98, 255, 0.15);
+  background: rgba(37, 99, 235, 0.15);
   transform: scale(1.05);
 }
 
@@ -510,19 +510,23 @@ p { color: var(--text-light); }
 }
 
 .trust-info .container {
-  background: linear-gradient(135deg, rgba(0, 98, 255, 0.9), rgba(0, 78, 204, 0.95));
+  background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border-radius: 30px;
   padding: 5rem 2rem;
   text-align: center;
-  color: white;
-  box-shadow: 0 20px 40px rgba(0, 98, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-dark);
+  box-shadow: var(--glass-shadow);
+  border: var(--glass-border);
 }
 
-.trust-info h2, .trust-info p {
-  color: white;
+.trust-info h2 {
+  color: var(--text-dark);
+}
+
+.trust-info p {
+  color: var(--text-light);
 }
 
 .trust-info h2 {
@@ -667,7 +671,7 @@ p { color: var(--text-light); }
   padding: 1rem;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(0, 98, 255, 0.2);
+  border: 1px solid rgba(37, 99, 235, 0.2);
   color: var(--text-dark);
   font-size: 1rem;
   font-family: inherit;
@@ -678,7 +682,7 @@ p { color: var(--text-light); }
 .glass-select:focus {
   border-color: var(--primary-color);
   background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 0 4px rgba(0, 98, 255, 0.1);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
 }
 
 .action-buttons {

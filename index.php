@@ -224,7 +224,7 @@ function getTrackHtml($images) {
         <div class="container reveal">
             <h2>Ready to Trade?</h2>
             <p class="mt-4 mb-8">Submit your gift cards for verification today and receive your payment directly once approved. We maintain a secure environment to ensure your trades go smoothly.</p>
-            <a href="#gift-cards" class="btn btn-glass-alt">Start Selling</a>
+            <a href="#gift-cards" class="btn btn-primary">Start Selling</a>
         </div>
     </section>
 

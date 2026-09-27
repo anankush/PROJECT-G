@@ -37,7 +37,7 @@ function getTrackHtml($images) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#f4f7fb">
-    <title>How It Works | Roshan Ka Tech</title>
+    <title>Contact | Roshan Ka Tech</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,9 +72,8 @@ function getTrackHtml($images) {
             <a href="index.php" class="logo">Roshan Ka Tech</a>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="index.php">Home</a></li>
                     <li><a href="how-it-works.php">How It Works</a></li>
-                    <li><a href="index.php#gift-cards">Buy / Sell Gift Cards</a></li>
+                    <li><a href="#gift-cards">Gift Cards</a></li>
                     <li><a href="why-us.php">Why Us</a></li>
                     <li><a href="contact.php">Contact</a></li>
                 </ul>
@@ -89,35 +88,31 @@ function getTrackHtml($images) {
         </div>
     </header>
 
-    <!-- How It Works Section -->
-    <section class="section how-it-works" style="padding-top: 12rem; min-height: 80vh;">
-        <div class="container">
-            <div class="text-center reveal">
-                <h2>How It Works</h2>
-                <p>Three simple steps to buy or sell your gift cards.</p>
-            </div>
-            
-            <div class="steps-grid reveal">
-                <div class="step">
-                    <span class="step-number">01</span>
-                    <h3>Choose Your Gift Card</h3>
-                    <p>Select the brand of the gift card you want to trade from our supported list.</p>
-                </div>
-                <div class="step">
-                    <span class="step-number">02</span>
-                    <h3>Buy or Sell</h3>
-                    <p>Choose whether to purchase a new card or sell your existing one securely.</p>
-                </div>
-                <div class="step">
-                    <span class="step-number">03</span>
-                    <h3>Complete Transaction</h3>
-                    <p>Get your card details instantly or receive payment for your sale.</p>
-                </div>
-            </div>
+    <!-- Contact Section -->
+<section class="section" style="padding-top: 12rem; min-height: 80vh;">
+    <div class="container">
+        <div class="text-center reveal">
+            <h2>Contact Us</h2>
+            <p>We're here to help! Send us a message and we'll get back to you shortly.</p>
         </div>
-    </section>
-
-    <!-- Footer -->
+        <div class="glass-panel reveal" style="max-width: 600px; margin: 3rem auto; padding: 3rem;">
+            <div class="glass-form-group" style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Name</label>
+                <input type="text" class="glass-select" placeholder="Your Name">
+            </div>
+            <div class="glass-form-group" style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Email</label>
+                <input type="email" class="glass-select" placeholder="Your Email">
+            </div>
+            <div class="glass-form-group" style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Message</label>
+                <textarea class="glass-select" rows="5" placeholder="How can we help you?"></textarea>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;">Send Message</button>
+        </div>
+    </div>
+</section>
+<!-- Footer -->
     <footer id="contact" class="footer">
         <div class="container">
             <div class="footer-grid">
@@ -154,5 +149,6 @@ function getTrackHtml($images) {
     <script src="landing/assets/js/main.js?v=2.1"></script>
 </body>
 </html>
+
 
 

@@ -81,6 +81,7 @@ function getTrackHtml($images) {
             <a href="../index.php" class="logo">Roshan Ka Tech</a>
             <nav>
                 <ul class="nav-links">
+                    <li><a href="../index.php">Home</a></li>
                     <li><a href="../how-it-works.php">How It Works</a></li>
                     <li><a href="../index.php#gift-cards">Buy / Sell Gift Cards</a></li>
                     <li><a href="../why-us.php">Why Us</a></li>
@@ -246,3 +247,4 @@ function getTrackHtml($images) {
     </script>
 </body>
 </html>
+

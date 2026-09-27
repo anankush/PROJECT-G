@@ -72,8 +72,9 @@ function getTrackHtml($images) {
             <a href="index.php" class="logo">Roshan Ka Tech</a>
             <nav>
                 <ul class="nav-links">
+                    <li><a href="index.php">Home</a></li>
                     <li><a href="how-it-works.php">How It Works</a></li>
-                    <li><a href="#gift-cards">Gift Cards</a></li>
+                    <li><a href="index.php#gift-cards">Buy / Sell Gift Cards</a></li>
                     <li><a href="why-us.php">Why Us</a></li>
                     <li><a href="contact.php">Contact</a></li>
                 </ul>
@@ -88,7 +89,32 @@ function getTrackHtml($images) {
         </div>
     </header>
 
-    <!-- Contact Section -->`r`n<section class="section" style="padding-top: 12rem; min-height: 80vh;">`r`n    <div class="container">`r`n        <div class="text-center reveal">`r`n            <h2>Contact Us</h2>`r`n            <p>We're here to help! Send us a message and we'll get back to you shortly.</p>`r`n        </div>`r`n        <div class="glass-panel reveal" style="max-width: 600px; margin: 3rem auto; padding: 3rem;">`r`n            <div class="glass-form-group" style="margin-bottom: 1.5rem;">`r`n                <label style="display: block; margin-bottom: 0.5rem;">Name</label>`r`n                <input type="text" class="glass-select" placeholder="Your Name">`r`n            </div>`r`n            <div class="glass-form-group" style="margin-bottom: 1.5rem;">`r`n                <label style="display: block; margin-bottom: 0.5rem;">Email</label>`r`n                <input type="email" class="glass-select" placeholder="Your Email">`r`n            </div>`r`n            <div class="glass-form-group" style="margin-bottom: 2rem;">`r`n                <label style="display: block; margin-bottom: 0.5rem;">Message</label>`r`n                <textarea class="glass-select" rows="5" placeholder="How can we help you?"></textarea>`r`n            </div>`r`n            <button class="btn btn-primary" style="width: 100%;">Send Message</button>`r`n        </div>`r`n    </div>`r`n</section>`r`n<!-- Footer -->
+    <!-- Contact Section -->
+    <section class="section" style="padding-top: 12rem; min-height: 80vh;">
+        <div class="container">
+            <div class="text-center reveal">
+                <h2>Contact Us</h2>
+                <p>We're here to help! Send us a message and we'll get back to you shortly.</p>
+            </div>
+            <div class="glass-panel reveal" style="max-width: 600px; margin: 3rem auto; padding: 3rem;">
+                <div class="glass-form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Name</label>
+                    <input type="text" class="glass-select" placeholder="Your Name" style="width: 100%;">
+                </div>
+                <div class="glass-form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Email</label>
+                    <input type="email" class="glass-select" placeholder="Your Email" style="width: 100%;">
+                </div>
+                <div class="glass-form-group" style="margin-bottom: 2rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Message</label>
+                    <textarea class="glass-select" rows="5" placeholder="How can we help you?" style="width: 100%; resize: vertical;"></textarea>
+                </div>
+                <button class="btn btn-primary" style="width: 100%;">Send Message</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer id="contact" class="footer">
         <div class="container">
             <div class="footer-grid">
@@ -125,4 +151,6 @@ function getTrackHtml($images) {
     <script src="landing/assets/js/main.js?v=2.1"></script>
 </body>
 </html>
+
+
 

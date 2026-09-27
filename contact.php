@@ -105,6 +105,10 @@ function getTrackHtml($images) {
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Email</label>
                     <input type="email" class="glass-select" placeholder="Your Email" style="width: 100%;">
                 </div>
+                <div class="glass-form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Subject</label>
+                    <input type="text" class="glass-select" placeholder="What is this regarding?" style="width: 100%;">
+                </div>
                 <div class="glass-form-group" style="margin-bottom: 2rem;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Message</label>
                     <textarea class="glass-select" rows="5" placeholder="How can we help you?" style="width: 100%; resize: vertical;"></textarea>

@@ -37,7 +37,7 @@ function getTrackHtml($images) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#f4f7fb">
-    <title>Roshan Ka Tech | Buy & Sell Gift Cards</title>
+    <title>Why Us | Roshan Ka Tech</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,7 +69,7 @@ function getTrackHtml($images) {
     <!-- Header / Navigation -->
     <header class="header">
         <div class="container nav-container">
-            <a href="#" class="logo">Roshan Ka Tech</a>
+            <a href="index.php" class="logo">Roshan Ka Tech</a>
             <nav>
                 <ul class="nav-links">
                     <li><a href="how-it-works.php">How It Works</a></li>
@@ -88,90 +88,8 @@ function getTrackHtml($images) {
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container hero-content reveal">
-            <h1>Buy & Sell Gift Cards.<br>Fast & Secure.</h1>
-            <p>Buy premium gift cards at great rates or turn your unused gift cards into real money.<br>
-            <a href="https://www.youtube.com/@RoshanKaTech1" target="_blank" class="yt-channel-link">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                Roshan Ka Tech
-            </a></p>
-            <div class="hero-cta">
-                <a href="#gift-cards" class="btn btn-primary">Start Trading</a>
-                <a href="#how-it-works" class="btn btn-outline">How It Works</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Supported Gift Cards Section (Dynamic) -->
-    <section id="gift-cards" class="section gift-cards">
-        <div class="container">
-            <div class="text-center reveal">
-                <h2>Trade Gift Cards</h2>
-                <p>Select your gift card brand below to buy or sell.</p>
-            </div>
-            
-            <div class="cards-grid reveal">
-                <?php if (empty($giftCards)): ?>
-                    
-                    <!-- Empty State: Displayed when no active gift cards exist in the database -->
-                    <div class="empty-state glass-panel">
-                        <h3>Gift cards will appear here soon.</h3>
-                        <p>We are currently updating our inventory. Please check back later.</p>
-                    </div>
-
-                <?php else: ?>
-                    
-                    <!-- Dynamic Loop: Display active gift cards -->
-                    <?php foreach ($giftCards as $card): ?>
-                        <div class="card">
-                            <div class="card-img-wrapper">
-                                <img src="<?= htmlspecialchars($card['image_path'] ?? '') ?>" alt="<?= htmlspecialchars($card['brand_name']) ?> Gift Card" loading="lazy">
-                            </div>
-                            <h3><?= htmlspecialchars($card['brand_name']) ?></h3>
-                            
-                            <a href="landing/card-details.php?id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary" style="margin-top: 1rem;">Buy / Sell Options</a>
-                        </div>
-                    <?php endforeach; ?>
-
-                <?php endif; ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="section how-it-works">
-        <div class="container">
-            <div class="text-center reveal">
-                <h2>How It Works</h2>
-                <p>Three simple steps to buy or sell your gift cards.</p>
-            </div>
-            
-            <div class="steps-grid reveal">
-                <div class="step">
-                    <span class="step-number">01</span>
-                    <h3>Choose Your Gift Card</h3>
-                    <p>Select the brand of the gift card you want to trade from our supported list.</p>
-                </div>
-                <div class="step">
-                    <span class="step-number">02</span>
-                    <h3>Buy or Sell</h3>
-                    <p>Choose whether to purchase a new card or sell your existing one securely.</p>
-                </div>
-                <div class="step">
-                    <span class="step-number">03</span>
-                    <h3>Complete Transaction</h3>
-                    <p>Get your card details instantly or receive payment for your sale.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Why Choose Us -->
-    <section id="why-us" class="section">
+    <section class="section" style="padding-top: 12rem; min-height: 80vh;">
         <div class="container">
             <div class="text-center reveal">
                 <h2>Why Roshan Ka Tech</h2>
@@ -222,15 +140,25 @@ function getTrackHtml($images) {
                     <p>Receive your funds conveniently after approval.</p><a href="why-us.php#easy-payout" class="know-more-link">Know More &rarr;</a>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Trust / Info Section -->
-    <section class="trust-info">
-        <div class="container reveal">
-            <h2>Ready to Trade?</h2>
-            <p class="mt-4 mb-8">Buy premium gift cards instantly or submit your unused cards for quick payment. We maintain a secure environment to ensure your trades go smoothly.</p>
-            <a href="#gift-cards" class="btn btn-primary">Start Trading</a>
+            
+            <div class="mt-4" style="margin-top: 5rem;">
+                <div id="simple-process" class="glass-panel" style="padding: 3rem; margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary-color);">Simple Process</h3>
+                    <p style="font-size: 1.1rem; color: var(--text-light);">Our system is designed to remove all the complexity from trading gift cards. No need to fill out endless forms or jump through hoops. Just select your card, choose the value, and you are ready to go. The entire process takes less than a minute.</p>
+                </div>
+                <div id="fast-verification" class="glass-panel" style="padding: 3rem; margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary-color);">Fast Verification</h3>
+                    <p style="font-size: 1.1rem; color: var(--text-light);">We understand that your time is valuable. Our dedicated team and automated systems work round-the-clock to verify the validity of your gift cards as quickly as possible. Most trades are verified within minutes, so you never have to wait.</p>
+                </div>
+                <div id="secure-handling" class="glass-panel" style="padding: 3rem; margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary-color);">Secure Handling</h3>
+                    <p style="font-size: 1.1rem; color: var(--text-light);">Security is our top priority. We use industry-standard encryption and strict data protection policies to ensure that your personal information and gift card details are always safe. You can trade with complete peace of mind.</p>
+                </div>
+                <div id="easy-payout" class="glass-panel" style="padding: 3rem; margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary-color);">Easy Payout</h3>
+                    <p style="font-size: 1.1rem; color: var(--text-light);">Getting paid should be the easiest part. Once your card is verified, your funds are immediately processed and sent to your preferred payment method. We support multiple payout options to make it as convenient as possible for you.</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -271,3 +199,4 @@ function getTrackHtml($images) {
     <script src="landing/assets/js/main.js?v=2.1"></script>
 </body>
 </html>
+

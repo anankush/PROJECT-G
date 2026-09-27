@@ -924,3 +924,17 @@ p { color: var(--text-light); }
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
 }
+
+/* ===== KNOW MORE LINK ===== */
+.know-more-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+.know-more-link:hover {
+  color: var(--primary-hover);
+  transform: translateX(4px);
+}

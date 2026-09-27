@@ -68,17 +68,25 @@ img {
 
 .floating-bg-card {
   position: absolute;
-  width: 320px; /* Increased size significantly for better visual presence */
-  opacity: 0.35; /* Increased opacity to guarantee visibility */
+  width: 320px;
+  opacity: 0.25; /* Adjusted opacity to blend smoothly */
   border-radius: 16px;
-  filter: grayscale(10%) blur(4px); /* Slightly less blur */
+  filter: grayscale(10%) blur(4px);
   will-change: transform;
+  /* Centered base position before animation takes over */
+  top: 50%;
+  left: 50%;
+  margin-top: -100px;
+  margin-left: -160px;
 }
 
-@keyframes floatDynamicCard {
-  0% { transform: translateY(0) rotate(0deg) scale(1); }
-  50% { transform: translateY(-30px) rotate(5deg) scale(1.05); }
-  100% { transform: translateY(0) rotate(0deg) scale(1); }
+@keyframes diagonalInfiniteScroll {
+  0% { 
+    transform: translate(calc(-100vw + var(--track-x, 0vw)), 100vh) rotate(120deg); 
+  }
+  100% { 
+    transform: translate(calc(100vw + var(--track-x, 0vw)), -100vh) rotate(120deg); 
+  }
 }
 
 .bg-shape {

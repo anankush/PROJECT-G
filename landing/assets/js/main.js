@@ -1,23 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Floating Background Cards Logic
+    // Floating Background Cards Logic (Diagonal Infinite Scroll)
     const bgCards = document.querySelectorAll('.floating-bg-card');
     if (bgCards.length > 0) {
+        const totalDuration = 50; // Super slow animation (50 seconds per cycle)
+        
         bgCards.forEach((card, index) => {
-            // Randomly position the cards across the screen
-            const randomX = Math.floor(Math.random() * 85) + 5; // 5% to 90%
-            const randomY = Math.floor(Math.random() * 85) + 5; // 5% to 90%
+            // Create a track offset so they don't all follow the exact same line
+            // This spreads them across 3 different parallel tracks (-35vw, 0vw, +35vw)
+            const trackOffset = (index % 3) * 35 - 35; 
             
-            // Randomize animation duration and delay for organic feel
-            const randomDuration = Math.floor(Math.random() * 15) + 20; // 20s to 35s
-            const randomDelay = Math.floor(Math.random() * 10);
-            
-            // Random base rotation
-            const randomRotate = Math.floor(Math.random() * 60) - 30; // -30deg to 30deg
+            // Negative delay ensures they are already spread out on the screen when the page loads
+            const delay = -1 * (index / bgCards.length) * totalDuration;
 
-            card.style.left = `${randomX}%`;
-            card.style.top = `${randomY}%`;
-            card.style.transform = `rotate(${randomRotate}deg)`;
-            card.style.animation = `floatDynamicCard ${randomDuration}s ease-in-out ${randomDelay}s infinite alternate`;
+            // Pass the track offset to CSS via custom property
+            card.style.setProperty('--track-x', `${trackOffset}vw`);
+            
+            // Apply the diagonal scroll animation
+            card.style.animation = `diagonalInfiniteScroll ${totalDuration}s linear ${delay}s infinite`;
         });
     }
 

@@ -50,15 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $message = "Hello $name,\n\nYour OTP for registration is: $otp\n\nPlease enter this to complete your sign up.\n\nThanks,\nRoshan Ka Tech";
                         $headers = "From: noreply@roshankatech.com";
                         
-                        $mail_status = send_google_mail($email, $subject, $message);
+                        send_google_mail($email, $subject, $message);
                         
-                        if ($mail_status === true || $mail_status !== false) {
-                            $_SESSION['signup_step'] = 2;
-                            $step = 2;
-                            $success = "OTP has been sent to your email. Please check your inbox (and spam folder).";
-                        } else {
-                            $error = "Failed to send OTP email. Please check configuration.";
-                        }
+                        $_SESSION['signup_step'] = 2;
+                        $step = 2;
+                        $success = "OTP has been sent to your email. Please check your inbox (and spam folder).";
                     }
                 } catch (PDOException $e) {
                     $error = "Database error. Please try again.";
@@ -109,13 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $subject = "Your New Verification OTP - Roshan Ka Tech";
         $message = get_email_template($data['name'], $otp);
-        $mail_status = send_google_mail($data['email'], $subject, $message);
+        send_google_mail($data['email'], $subject, $message);
         
-        if ($mail_status === false) {
-            $error = "Failed to resend OTP email.";
-        } else {
-            $success = "A new OTP has been sent to your email.";
-        }
+        $success = "A new OTP has been sent to your email.";
     } elseif (isset($_POST['action']) && $_POST['action'] === 'change_details') {
         unset($_SESSION['signup_step']);
         unset($_SESSION['signup_otp']);

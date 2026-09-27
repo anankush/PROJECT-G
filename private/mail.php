@@ -56,7 +56,14 @@ function send_google_mail($to, $subject, $body) {
     $curl_error = curl_error($ch);
     curl_close($ch);
     
-    // If you need to debug later, you can write $response or $curl_error to a log file
-    return $response;
+    // Log the exact response for debugging
+    $log_msg = date('[Y-m-d H:i:s] ') . "URL: " . substr($google_script_url, 0, 30) . "... | cURL Error: $curl_error | Response: $response\n";
+    @file_put_contents(__DIR__ . '/mail_debug.log', $log_msg, FILE_APPEND);
+    
+    if ($curl_error || stripos($response, 'Error') !== false) {
+        return false;
+    }
+    
+    return true;
 }
 ?>

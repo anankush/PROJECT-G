@@ -43,14 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             
                             // Send Email OTP
                             $subject = "Your Login Verification OTP - Roshan Ka Tech";
-                            $message = "Hello {$user['name']},\n\nYour OTP for login is: $otp\n\nPlease enter this to access your account.\n\nThanks,\nRoshan Ka Tech";
-                            $headers = "From: noreply@roshankatech.com";
+                            $message = get_email_template($user['name'], $otp);
                             
-                            send_google_mail($user['email'], $subject, $message);
+                            $mail_status = send_google_mail($user['email'], $subject, $message);
                             
-                            $_SESSION['login_step'] = 2;
-                            $step = 2;
-                            $success = "OTP has been sent to your registered email address.";
+                            if ($mail_status === false) {
+                                $error = "Failed to send OTP email. Please check configuration.";
+                            } else {
+                                $_SESSION['login_step'] = 2;
+                                $step = 2;
+                                $success = "OTP has been sent to your registered email address.";
+                            }
                         }
                     } else {
                         $error = "Invalid credentials. Please try again.";
@@ -93,9 +96,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $subject = "Your New Login Verification OTP - Roshan Ka Tech";
             $message = get_email_template($u['name'], $otp);
-            send_google_mail($u['email'], $subject, $message);
+            $mail_status = send_google_mail($u['email'], $subject, $message);
             
-            $success = "A new OTP has been sent to your registered email address.";
+            if ($mail_status === false) {
+                $error = "Failed to resend OTP email.";
+            } else {
+                $success = "A new OTP has been sent to your registered email address.";
+            }
         } else {
             // Session expired or invalid
             unset($_SESSION['login_step']);

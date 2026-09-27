@@ -11,40 +11,103 @@ if (isset($_SESSION['user_id'])) {
 }
 
 $error = '';
+$success = '';
+$step = $_SESSION['login_step'] ?? 1;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    
-    if ($email && $password) {
-        if ($pdo) {
-            try {
-                $stmt = $pdo->prepare("SELECT id, name, password_hash, role FROM users WHERE email = ? LIMIT 1");
-                $stmt->execute([$email]);
-                $user = $stmt->fetch();
-                
-                if ($user && password_verify($password, $user['password_hash'])) {
-                    if ($user['role'] !== 'user') {
-                        $error = "Access denied. Admins must log in through the admin portal.";
+    if (isset($_POST['action']) && $_POST['action'] === 'login') {
+        $identifier = trim($_POST['identifier'] ?? '');
+        $password = $_POST['password'] ?? '';
+        
+        if ($identifier && $password) {
+            if ($pdo) {
+                try {
+                    // Check by email OR phone
+                    $stmt = $pdo->prepare("SELECT id, name, email, phone, password_hash, role FROM users WHERE email = ? OR phone = ? LIMIT 1");
+                    $stmt->execute([$identifier, $identifier]);
+                    $user = $stmt->fetch();
+                    
+                    if ($user && password_verify($password, $user['password_hash'])) {
+                        if ($user['role'] !== 'user') {
+                            $error = "Access denied. Admins must log in through the admin portal.";
+                        } else {
+                            // Generate OTP for login
+                            $otp = rand(100000, 999999);
+                            $_SESSION['login_otp'] = $otp;
+                            $_SESSION['pending_user'] = [
+                                'id' => $user['id'],
+                                'name' => $user['name'],
+                                'email' => $user['email'],
+                                'role' => $user['role']
+                            ];
+                            
+                            // Send Email OTP
+                            $subject = "Your Login Verification OTP - Roshan Ka Tech";
+                            $message = "Hello {$user['name']},\n\nYour OTP for login is: $otp\n\nPlease enter this to access your account.\n\nThanks,\nRoshan Ka Tech";
+                            $headers = "From: noreply@roshankatech.com";
+                            
+                            @mail($user['email'], $subject, $message, $headers);
+                            
+                            $_SESSION['login_step'] = 2;
+                            $step = 2;
+                            $success = "OTP has been sent to your registered email address.";
+                        }
                     } else {
-                        $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['user_name'] = $user['name'];
-                        $_SESSION['user_role'] = $user['role'];
-                        
-                        header("Location: ../index.php");
-                        exit;
+                        $error = "Invalid credentials. Please try again.";
                     }
-                } else {
-                    $error = "Invalid email or password.";
+                } catch (PDOException $e) {
+                    $error = "Database error. Please try again later.";
                 }
-            } catch (PDOException $e) {
-                $error = "Database error. Please try again later.";
+            } else {
+                $error = "Database connection error.";
             }
         } else {
-            $error = "Database connection error.";
+            $error = "Please fill in all fields.";
         }
-    } else {
-        $error = "Please fill in all fields.";
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'verify_otp') {
+        $user_otp = trim($_POST['otp'] ?? '');
+        
+        if (isset($_SESSION['login_otp']) && $user_otp == $_SESSION['login_otp']) {
+            $u = $_SESSION['pending_user'];
+            
+            // Set final session variables
+            $_SESSION['user_id'] = $u['id'];
+            $_SESSION['user_name'] = $u['name'];
+            $_SESSION['user_role'] = $u['role'];
+            
+            // Clear pending login data
+            unset($_SESSION['login_otp']);
+            unset($_SESSION['pending_user']);
+            unset($_SESSION['login_step']);
+            
+            header("Location: ../index.php");
+            exit;
+        } else {
+            $error = "Invalid OTP. Please try again.";
+        }
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'resend_otp') {
+        if (isset($_SESSION['pending_user'])) {
+            $otp = rand(100000, 999999);
+            $_SESSION['login_otp'] = $otp;
+            $u = $_SESSION['pending_user'];
+            
+            $subject = "Your New Login Verification OTP - Roshan Ka Tech";
+            $message = "Hello {$u['name']},\n\nYour new OTP for login is: $otp\n\nPlease enter this to access your account.\n\nThanks,\nRoshan Ka Tech";
+            $headers = "From: noreply@roshankatech.com";
+            @mail($u['email'], $subject, $message, $headers);
+            
+            $success = "A new OTP has been sent to your registered email address.";
+        } else {
+            // Session expired or invalid
+            unset($_SESSION['login_step']);
+            $step = 1;
+            $error = "Session expired. Please login again.";
+        }
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'cancel_login') {
+        unset($_SESSION['login_step']);
+        unset($_SESSION['login_otp']);
+        unset($_SESSION['pending_user']);
+        $step = 1;
     }
 }
 
@@ -76,7 +139,7 @@ function getTrackHtml($images) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Roshan Ka Tech</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../landing/assets/css/style.css?v=2.1">
+    <link rel="stylesheet" href="../landing/assets/css/style.css?v=2.2">
     <style>
         .auth-container {
             min-height: 100vh;
@@ -114,20 +177,37 @@ function getTrackHtml($images) {
             font-weight: 500;
             border: 1px solid rgba(255, 0, 0, 0.2);
         }
+        .success-message {
+            background: rgba(0, 128, 0, 0.1);
+            color: #2e7d32;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid rgba(0, 128, 0, 0.2);
+        }
         .auth-links {
             margin-top: 1.5rem;
             text-align: center;
             font-size: 0.95rem;
         }
-        .auth-links a {
+        .auth-links a, .auth-links button {
             color: var(--primary-color);
             font-weight: 600;
             transition: var(--transition);
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
         }
-        .auth-links a:hover {
+        .auth-links a:hover, .auth-links button:hover {
             color: var(--primary-hover);
+            text-decoration: underline;
         }
-      </style>
+    </style>
 </head>
 <body>
     <div class="floating-bg-container">
@@ -153,30 +233,67 @@ function getTrackHtml($images) {
             <div class="text-center mb-4">
                 <a href="../index.php" class="logo" style="font-size: 1.5rem;">Roshan Ka Tech</a>
             </div>
-            <h2>Welcome Back</h2>
             
-            <?php if ($error): ?>
-                <div class="error-message"><?= htmlspecialchars($error) ?></div>
-            <?php endif; ?>
+            <?php if ($step === 1): ?>
+                <h2>Welcome Back</h2>
+                
+                <?php if ($error): ?>
+                    <div class="error-message"><?= htmlspecialchars($error) ?></div>
+                <?php endif; ?>
 
-            <form method="POST" action="">
-                <div class="glass-form-group" style="margin-bottom: 1.25rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Email Address</label>
-                    <input type="email" name="email" class="glass-select" placeholder="Enter your email" style="width: 100%;" required>
-                </div>
-                <div class="glass-form-group" style="margin-bottom: 2rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                        <label style="font-weight: 600; color: var(--text-dark); margin: 0;">Password</label>
-                        <a href="forgot-password.php" style="font-size: 0.85rem; color: var(--primary-color); font-weight: 600; text-decoration: none;">Forgot Password?</a>
+                <form method="POST" action="">
+                    <input type="hidden" name="action" value="login">
+                    <div class="glass-form-group" style="margin-bottom: 1.25rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Email or Mobile Number</label>
+                        <input type="text" name="identifier" class="glass-select" placeholder="Enter your email or phone" style="width: 100%;" required>
                     </div>
-                    <input type="password" name="password" class="glass-select" placeholder="Enter your password" style="width: 100%;" required>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Login</button>
-            </form>
+                    <div class="glass-form-group" style="margin-bottom: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <label style="font-weight: 600; color: var(--text-dark); margin: 0;">Password</label>
+                            <a href="forgot-password.php" style="font-size: 0.85rem; color: var(--primary-color); font-weight: 600; text-decoration: none;">Forgot Password?</a>
+                        </div>
+                        <input type="password" name="password" class="glass-select" placeholder="Enter your password" style="width: 100%;" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Login</button>
+                </form>
 
-            <div class="auth-links">
-                <p>Don't have an account? <a href="register.php">Sign up here</a></p>
-            </div>
+                <div class="auth-links">
+                    <p>Don't have an account? <a href="register.php">Sign up here</a></p>
+                </div>
+                
+            <?php else: ?>
+                <h2>Verify Login</h2>
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">
+                    We've sent a 6-digit OTP to your registered email address <strong><?= htmlspecialchars($_SESSION['pending_user']['email'] ?? '') ?></strong>.
+                </p>
+                
+                <?php if ($success): ?>
+                    <div class="success-message"><?= htmlspecialchars($success) ?></div>
+                <?php endif; ?>
+                <?php if ($error): ?>
+                    <div class="error-message"><?= htmlspecialchars($error) ?></div>
+                <?php endif; ?>
+
+                <form method="POST" action="">
+                    <input type="hidden" name="action" value="verify_otp">
+                    <div class="glass-form-group" style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark); text-align: center;">Enter OTP</label>
+                        <input type="text" name="otp" class="glass-select" placeholder="e.g. 123456" style="width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 2px;" required maxlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Verify & Login</button>
+                </form>
+
+                <div class="auth-links" style="display: flex; justify-content: space-between; margin-top: 2rem;">
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="action" value="cancel_login">
+                        <button type="submit">Back to Login</button>
+                    </form>
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="action" value="resend_otp">
+                        <button type="submit">Resend OTP</button>
+                    </form>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 

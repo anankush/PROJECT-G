@@ -1,29 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Floating Background Cards Logic (Diagonal Infinite Scroll)
-    const bgCards = document.querySelectorAll('.floating-bg-card');
-    if (bgCards.length > 0) {
-        const totalDuration = 50; // Super slow animation (50 seconds per cycle)
+    // Seamless Infinite Diagonal Marquee Logic
+    const bgContainer = document.querySelector('.floating-bg-container');
+    const bgTrack = document.querySelector('.bg-marquee-track');
+    
+    if (bgContainer && bgTrack) {
+        // Randomize the slant angle (e.g., -30deg for bottom-left to top-right, 30deg for top-left to bottom-right)
+        const angles = [-35, 35, -25, 25];
+        const randomAngle = angles[Math.floor(Math.random() * angles.length)];
         
-        // Pick a random animation path and direction for this page load
-        const animations = ['diagonalScroll1', 'diagonalScroll2'];
+        // Randomize direction (normal or reverse)
         const directions = ['normal', 'reverse'];
-        const chosenAnim = animations[Math.floor(Math.random() * animations.length)];
-        const chosenDir = directions[Math.floor(Math.random() * directions.length)];
+        const randomDir = directions[Math.floor(Math.random() * directions.length)];
         
-        bgCards.forEach((card, index) => {
-            // Create a track offset so they don't all follow the exact same line
-            // This spreads them across 3 different parallel tracks (-35vw, 0vw, +35vw)
-            const trackOffset = (index % 3) * 35 - 35; 
-            
-            // Negative delay ensures they are already spread out on the screen when the page loads
-            const delay = -1 * (index / bgCards.length) * totalDuration;
-
-            // Pass the track offset to CSS via custom property
-            card.style.setProperty('--track-x', `${trackOffset}vw`);
-            
-            // Apply the randomized diagonal scroll animation
-            card.style.animation = `${chosenAnim} ${totalDuration}s linear ${delay}s infinite ${chosenDir}`;
-        });
+        // Apply to elements
+        bgContainer.style.transform = `rotate(${randomAngle}deg)`;
+        bgTrack.style.animationDirection = randomDir;
     }
 
     // Scroll Reveal Animation using Intersection Observer

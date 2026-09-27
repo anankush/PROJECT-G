@@ -57,45 +57,40 @@ img {
 /* ===== BACKGROUND BLOBS FOR GLASS EFFECT ===== */
 .floating-bg-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: -50vh;
+  left: -50vw;
+  width: 200vw;
+  height: 200vh;
   overflow: hidden;
-  z-index: 0; /* Changed from -2 to 0 to ensure it is visible above background */
+  z-index: 0;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Rotation will be applied via JS to ensure random diagonals */
+}
+
+.bg-marquee-track {
+  display: flex;
+  gap: 2rem; /* Tight sequence without massive gaps */
+  width: max-content;
+  will-change: transform;
+  animation: bgMarqueeScroll 50s linear infinite;
 }
 
 .floating-bg-card {
-  position: absolute;
-  width: 320px;
-  opacity: 0.25; /* Adjusted opacity to blend smoothly */
-  border-radius: 16px;
+  width: 450px; /* Massive size */
+  height: auto;
+  object-fit: contain;
+  opacity: 0.25;
+  border-radius: 20px;
   filter: grayscale(10%) blur(4px);
-  will-change: transform;
-  /* Centered base position before animation takes over */
-  top: 50%;
-  left: 50%;
-  margin-top: -100px;
-  margin-left: -160px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-@keyframes diagonalScroll1 {
-  0% { 
-    transform: translate(calc(-100vw + var(--track-x, 0vw)), 100vh) rotate(120deg); 
-  }
-  100% { 
-    transform: translate(calc(100vw + var(--track-x, 0vw)), -100vh) rotate(120deg); 
-  }
-}
-
-@keyframes diagonalScroll2 {
-  0% { 
-    transform: translate(calc(-100vw + var(--track-x, 0vw)), -100vh) rotate(120deg); 
-  }
-  100% { 
-    transform: translate(calc(100vw + var(--track-x, 0vw)), 100vh) rotate(120deg); 
-  }
+@keyframes bgMarqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Exactly half to create seamless loop with cloned set */
 }
 
 .bg-shape {
@@ -872,12 +867,11 @@ p { color: var(--text-light); }
     gap: 2rem;
   }
   
-  /* Prevent background cards from overflowing the viewport horizontally on mobile */
+  /* Ensure continuous track visibility on mobile */
   .floating-bg-container {
-    width: 100%;
-    overflow-x: hidden;
+    width: 200vw;
   }
   .floating-bg-card {
-    width: 220px; /* Increased mobile size */
+    width: 300px; /* Big size for mobile too */
   }
 }

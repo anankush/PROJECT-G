@@ -15,6 +15,19 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 // Fetch the specific gift card details
 $card = getGiftCardById($pdo, $id);
+
+// Read background images dynamically from the /images folder
+$bgImages = [];
+$imageDir = __DIR__ . '/../images/';
+if (is_dir($imageDir)) {
+    $files = scandir($imageDir);
+    foreach ($files as $file) {
+        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        if (in_array($ext, ['jpg', 'jpeg', 'png', 'svg', 'webp', 'gif'])) {
+            $bgImages[] = '../images/' . $file;
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +45,13 @@ $card = getGiftCardById($pdo, $id);
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
+    <!-- Dynamic Floating Background Cards -->
+    <div class="floating-bg-container">
+        <?php foreach($bgImages as $bgImg): ?>
+            <img src="<?= htmlspecialchars($bgImg) ?>" class="floating-bg-card" alt="floating bg">
+        <?php endforeach; ?>
+    </div>
 
     <!-- Background Glassmorphism Blobs -->
     <div class="bg-shape shape-1"></div>

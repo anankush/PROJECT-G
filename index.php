@@ -5,6 +5,20 @@ require_once __DIR__ . '/private/giftcard_functions.php';
 
 // Fetch active gift cards from the database dynamically
 $giftCards = getActiveGiftCards($pdo);
+
+// Read background images dynamically from the /images folder
+$bgImages = [];
+$imageDir = __DIR__ . '/images/';
+if (is_dir($imageDir)) {
+    $files = scandir($imageDir);
+    foreach ($files as $file) {
+        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        // Only include standard image formats
+        if (in_array($ext, ['jpg', 'jpeg', 'png', 'svg', 'webp', 'gif'])) {
+            $bgImages[] = 'images/' . $file;
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +36,13 @@ $giftCards = getActiveGiftCards($pdo);
     <link rel="stylesheet" href="landing/assets/css/style.css">
 </head>
 <body>
+
+    <!-- Dynamic Floating Background Cards -->
+    <div class="floating-bg-container">
+        <?php foreach($bgImages as $bgImg): ?>
+            <img src="<?= htmlspecialchars($bgImg) ?>" class="floating-bg-card" alt="floating bg">
+        <?php endforeach; ?>
+    </div>
 
     <!-- Background Glassmorphism Blobs -->
     <div class="bg-shape shape-1"></div>

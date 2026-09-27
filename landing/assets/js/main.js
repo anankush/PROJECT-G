@@ -1,4 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Floating Background Cards Logic
+    const bgCards = document.querySelectorAll('.floating-bg-card');
+    if (bgCards.length > 0) {
+        bgCards.forEach((card, index) => {
+            // Randomly position the cards across the screen
+            const randomX = Math.floor(Math.random() * 85) + 5; // 5% to 90%
+            const randomY = Math.floor(Math.random() * 85) + 5; // 5% to 90%
+            
+            // Randomize animation duration and delay for organic feel
+            const randomDuration = Math.floor(Math.random() * 15) + 20; // 20s to 35s
+            const randomDelay = Math.floor(Math.random() * 10);
+            
+            // Random base rotation
+            const randomRotate = Math.floor(Math.random() * 60) - 30; // -30deg to 30deg
+
+            card.style.left = `${randomX}%`;
+            card.style.top = `${randomY}%`;
+            card.style.transform = `rotate(${randomRotate}deg)`;
+            card.style.animation = `floatDynamicCard ${randomDuration}s ease-in-out ${randomDelay}s infinite alternate`;
+        });
+    }
+
     // Scroll Reveal Animation using Intersection Observer
     const revealElements = document.querySelectorAll('.reveal');
 

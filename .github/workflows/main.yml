@@ -14,6 +14,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Inject Production Database Credentials
+        # Replaces dummy variables in private/db.php with secure secrets on the runner.
+        # This prevents credentials from being exposed in the repository,
+        # while ensuring the deployed app has the correct production access.
+        run: |
+          sed -i "s/\$db_host = 'localhost';/\$db_host = '${{ secrets.DB_HOST }}';/" private/db.php
+          sed -i "s/\$db_name = 'roshan_ka_tech';/\$db_name = '${{ secrets.DB_NAME }}';/" private/db.php
+          sed -i "s/\$db_user = 'root';/\$db_user = '${{ secrets.DB_USER }}';/" private/db.php
+          sed -i "s/\$db_pass = '';/\$db_pass = '${{ secrets.DB_PASSWORD }}';/" private/db.php
+
       - name: Sync files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:

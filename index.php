@@ -89,7 +89,7 @@ $giftCards = getActiveGiftCards($pdo);
                             </div>
                             <h3><?= htmlspecialchars($card['brand_name']) ?></h3>
                             
-                            <a href="card-details.php?id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary" style="margin-top: 1rem;">View Details & Sell</a>
+                            <a href="landing/card-details.php?id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary" style="margin-top: 1rem;">View Details & Sell</a>
                         </div>
                     <?php endforeach; ?>
 

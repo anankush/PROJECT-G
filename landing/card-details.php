@@ -4,8 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Centralized Database and Logic
-require_once __DIR__ . '/private/db.php';
-require_once __DIR__ . '/private/giftcard_functions.php';
+require_once __DIR__ . '/../private/db.php';
+require_once __DIR__ . '/../private/giftcard_functions.php';
 
 // Check if user is logged in (Assuming 'user_id' is stored in session upon login)
 $isLoggedIn = isset($_SESSION['user_id']);
@@ -29,7 +29,7 @@ $card = getGiftCardById($pdo, $id);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="landing/assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
@@ -41,12 +41,12 @@ $card = getGiftCardById($pdo, $id);
     <!-- Header / Navigation -->
     <header class="header">
         <div class="container nav-container">
-            <a href="index.php" class="logo">Roshan Ka Tech</a>
+            <a href="../index.php" class="logo">Roshan Ka Tech</a>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="index.php#how-it-works">How It Works</a></li>
-                    <li><a href="index.php#gift-cards">Gift Cards</a></li>
-                    <li><a href="index.php#why-us">Why Us</a></li>
+                    <li><a href="../index.php#how-it-works">How It Works</a></li>
+                    <li><a href="../index.php#gift-cards">Gift Cards</a></li>
+                    <li><a href="../index.php#why-us">Why Us</a></li>
                 </ul>
             </nav>
             <button class="mobile-menu-btn" aria-label="Open Menu">
@@ -69,7 +69,7 @@ $card = getGiftCardById($pdo, $id);
                 <div class="empty-state glass-panel reveal" style="max-width: 600px; margin: 0 auto; margin-top: 5rem;">
                     <h3>Gift Card Not Found</h3>
                     <p class="mb-4">We couldn't find the details for this gift card. It may have been removed or the inventory is updating.</p>
-                    <a href="index.php" class="btn btn-primary">Return to Home</a>
+                    <a href="../index.php" class="btn btn-primary">Return to Home</a>
                 </div>
 
             <?php else: ?>
@@ -119,7 +119,7 @@ $card = getGiftCardById($pdo, $id);
                                 <button type="button" id="sellNowBtn" class="btn btn-primary" onclick="openSignupModal()" style="display: none;">Sell Now</button>
                             <?php endif; ?>
                             
-                            <a href="index.php" class="btn btn-outline">Go Back</a>
+                            <a href="../index.php" class="btn btn-outline">Go Back</a>
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,7 @@ $card = getGiftCardById($pdo, $id);
             <h3>Sign Up Required</h3>
             <p>You need to create an account to sell your <?= htmlspecialchars($card['brand_name']) ?> gift card. Join Roshan Ka Tech today!</p>
             <div class="modal-actions">
-                <a href="auth/signup.php?card_id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary">Sign Up Now</a>
+                <a href="../auth/signup.php?card_id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary">Sign Up Now</a>
                 <button type="button" class="btn btn-outline" onclick="closeSignupModal()">Cancel</button>
             </div>
         </div>
@@ -152,7 +152,7 @@ $card = getGiftCardById($pdo, $id);
         </div>
     </footer>
 
-    <script src="landing/assets/js/main.js"></script>
+    <script src="assets/js/main.js"></script>
     <script>
         // Logic to show "Sell Now" button only after a value is selected
         document.addEventListener('DOMContentLoaded', function() {
@@ -193,7 +193,7 @@ $card = getGiftCardById($pdo, $id);
             const cardId = "<?= $card ? htmlspecialchars($card['id']) : '' ?>";
             
             // Adjust this path to wherever your logged-in user dashboard/sell process is
-            window.location.href = "dashboard/sell-process.php?card_id=" + cardId + "&value=" + val;
+            window.location.href = "../dashboard/sell-process.php?card_id=" + cardId + "&value=" + val;
         }
 
         function closeSignupModal() {

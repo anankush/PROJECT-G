@@ -62,18 +62,17 @@ img {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  z-index: -2;
+  z-index: 0; /* Changed from -2 to 0 to ensure it is visible above background */
   pointer-events: none;
 }
 
 .floating-bg-card {
   position: absolute;
   width: 180px;
-  opacity: 0.18; /* Just enough visibility */
+  opacity: 0.35; /* Increased opacity to guarantee visibility */
   border-radius: 16px;
-  filter: grayscale(15%) blur(6px); /* Noticeable background blur */
+  filter: grayscale(10%) blur(4px); /* Slightly less blur */
   will-change: transform;
-  z-index: -2;
 }
 
 @keyframes floatDynamicCard {
@@ -148,11 +147,13 @@ p { color: var(--text-light); }
   margin: 0 auto;
   padding: 0 1.5rem;
   position: relative;
-  z-index: 1;
+  z-index: 2; /* Ensures content is above floating bg */
 }
 
 .section {
   padding: 6rem 0;
+  position: relative;
+  z-index: 2;
 }
 
 .text-center { text-align: center; }
@@ -276,6 +277,7 @@ p { color: var(--text-light); }
   padding-top: 12rem;
   padding-bottom: 6rem;
   position: relative;
+  z-index: 2;
 }
 
 .hero-content {

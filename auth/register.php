@@ -104,8 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = $_SESSION['signup_data'];
         
         $subject = "Your New Verification OTP - Roshan Ka Tech";
-        $message = "Hello {$data['name']},\n\nYour new OTP for registration is: $otp\n\nPlease enter this to complete your sign up.\n\nThanks,\nRoshan Ka Tech";
-        $headers = "From: noreply@roshankatech.com";
+        $message = get_email_template($data['name'], $otp);
         send_google_mail($data['email'], $subject, $message);
         
         $success = "A new OTP has been sent to your email.";

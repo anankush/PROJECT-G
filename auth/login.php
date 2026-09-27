@@ -92,8 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $u = $_SESSION['pending_user'];
             
             $subject = "Your New Login Verification OTP - Roshan Ka Tech";
-            $message = "Hello {$u['name']},\n\nYour new OTP for login is: $otp\n\nPlease enter this to access your account.\n\nThanks,\nRoshan Ka Tech";
-            $headers = "From: noreply@roshankatech.com";
+            $message = get_email_template($u['name'], $otp);
             send_google_mail($u['email'], $subject, $message);
             
             $success = "A new OTP has been sent to your registered email address.";

@@ -8,14 +8,14 @@ $giftCards = getActiveGiftCards($pdo);
 
 // Read background images dynamically from the /images folder
 $bgImages = [];
-$imageDir = __DIR__ . '/images/';
+$imageDir = __DIR__ . '/landing/images/';
 if (is_dir($imageDir)) {
     $files = scandir($imageDir);
     foreach ($files as $file) {
         $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
         // Only include standard image formats
         if (in_array($ext, ['jpg', 'jpeg', 'png', 'svg', 'webp', 'gif'])) {
-            $bgImages[] = 'images/' . $file;
+            $bgImages[] = 'landing/images/' . $file;
         }
     }
 }

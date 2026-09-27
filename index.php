@@ -110,46 +110,48 @@ function getTrackHtml($images) {
     <!-- Supported Gift Cards Section (Dynamic) -->
     <section id="gift-cards" class="section gift-cards">
         <div class="container">
-            <div class="reveal" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-                <div>
-                    <h2 style="margin-bottom: 0.25rem;">Trade Gift Cards</h2>
-                    <p>Select your gift card brand below to buy or sell.</p>
-                </div>
-                <a href="gift-cards.php" class="view-all-link" style="color: var(--primary-color); font-weight: 600; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.4rem; padding-bottom: 0.2rem;">
+            <div class="text-center reveal">
+                <h2>Trade Gift Cards</h2>
+                <p>Select your gift card brand below to buy or sell.</p>
+            </div>
+            
+            <div style="position: relative; padding-top: 1.5rem;">
+                <!-- View All Link (Absolutely positioned to sit perfectly flush at the top right of the cards grid) -->
+                <a href="gift-cards.php" class="view-all-link" style="position: absolute; right: 0; top: 0; color: var(--primary-color); font-weight: 600; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.3rem; z-index: 10;">
                     View All
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
                 </a>
-            </div>
-            
-            <div class="cards-grid reveal">
-                <?php if (empty($giftCards)): ?>
-                    
-                    <!-- Empty State: Displayed when no active gift cards exist in the database -->
-                    <div class="empty-state glass-panel">
-                        <h3>Gift cards will appear here soon.</h3>
-                        <p>We are currently updating our inventory. Please check back later.</p>
-                    </div>
-
-                <?php else: ?>
-                    
-                    <!-- Dynamic Loop: Display active gift cards (Limit to 8 on homepage) -->
-                    <?php 
-                    $displayCards = array_slice($giftCards, 0, 8);
-                    foreach ($displayCards as $card): 
-                    ?>
-                        <div class="card">
-                            <div class="card-img-wrapper">
-                                <img src="<?= htmlspecialchars($card['image_path'] ?? '') ?>" alt="<?= htmlspecialchars($card['brand_name']) ?> Gift Card" loading="lazy">
-                            </div>
-                            <h3><?= htmlspecialchars($card['brand_name']) ?></h3>
-                            
-                            <a href="landing/card-details.php?id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary" style="margin-top: 1rem;">Buy / Sell Options</a>
+                
+                <div class="cards-grid reveal" style="margin-top: 1.5rem;">
+                    <?php if (empty($giftCards)): ?>
+                        
+                        <!-- Empty State: Displayed when no active gift cards exist in the database -->
+                        <div class="empty-state glass-panel">
+                            <h3>Gift cards will appear here soon.</h3>
+                            <p>We are currently updating our inventory. Please check back later.</p>
                         </div>
-                    <?php endforeach; ?>
-
-                <?php endif; ?>
+    
+                    <?php else: ?>
+                        
+                        <!-- Dynamic Loop: Display active gift cards (Limit to 8 on homepage) -->
+                        <?php 
+                        $displayCards = array_slice($giftCards, 0, 8);
+                        foreach ($displayCards as $card): 
+                        ?>
+                            <div class="card">
+                                <div class="card-img-wrapper">
+                                    <img src="<?= htmlspecialchars($card['image_path'] ?? '') ?>" alt="<?= htmlspecialchars($card['brand_name']) ?> Gift Card" loading="lazy">
+                                </div>
+                                <h3><?= htmlspecialchars($card['brand_name']) ?></h3>
+                                
+                                <a href="landing/card-details.php?id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary" style="margin-top: 1rem;">Buy / Sell Options</a>
+                            </div>
+                        <?php endforeach; ?>
+    
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </section>

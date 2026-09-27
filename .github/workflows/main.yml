@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /roshankatech.unaux.com/ # Deployment path for ProFreeHost subdomain
+          server-dir: /htdocs/ # Direct deployment path for ProFreeHost/InfinityFree main domain
           exclude: |
             **/.git*
             **/.git*/**

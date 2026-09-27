@@ -12,45 +12,103 @@ if (isset($_SESSION['user_id'])) {
 
 $error = '';
 $success = '';
+$step = $_SESSION['signup_step'] ?? 1;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    
-    if ($name && $email && $password) {
-        if ($pdo) {
-            try {
-                // Check if email already exists
-                $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
-                $stmt->execute([$email]);
-                
-                if ($stmt->fetch()) {
-                    $error = "Email address is already in use.";
-                } else {
-                    $hash = password_hash($password, PASSWORD_DEFAULT);
-                    $stmt = $pdo->prepare("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'user')");
-                    if ($stmt->execute([$name, $email, $hash])) {
-                        // Auto login after registration
-                        $_SESSION['user_id'] = $pdo->lastInsertId();
-                        $_SESSION['user_name'] = $name;
-                        $_SESSION['user_role'] = 'user';
-                        
-                        header("Location: ../index.php");
-                        exit;
+    if (isset($_POST['action']) && $_POST['action'] === 'register') {
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
+        $password = $_POST['password'] ?? '';
+        
+        if ($name && $email && $phone && $password) {
+            if ($pdo) {
+                try {
+                    // Check if email already exists
+                    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+                    $stmt->execute([$email]);
+                    
+                    if ($stmt->fetch()) {
+                        $error = "Email address is already in use.";
                     } else {
-                        $error = "Failed to register. Please try again.";
+                        // Generate OTP
+                        $otp = rand(100000, 999999);
+                        $_SESSION['signup_otp'] = $otp;
+                        $_SESSION['signup_data'] = [
+                            'name' => $name,
+                            'email' => $email,
+                            'phone' => $phone,
+                            'password' => $password
+                        ];
+                        
+                        // Send Email (Basic implementation)
+                        $subject = "Your Verification OTP - Roshan Ka Tech";
+                        $message = "Hello $name,\n\nYour OTP for registration is: $otp\n\nPlease enter this to complete your sign up.\n\nThanks,\nRoshan Ka Tech";
+                        $headers = "From: noreply@roshankatech.com";
+                        
+                        @mail($email, $subject, $message, $headers);
+                        
+                        $_SESSION['signup_step'] = 2;
+                        $step = 2;
+                        $success = "OTP has been sent to your email. Please check your inbox (and spam folder).";
                     }
+                } catch (PDOException $e) {
+                    $error = "Database error. Please try again.";
                 }
-            } catch (PDOException $e) {
-                // If table doesn't exist, we can show a friendly message or we would auto-create it.
-                $error = "Database error. Please ensure the database schema is imported.";
+            } else {
+                $error = "Database connection error.";
             }
         } else {
-            $error = "Database connection error.";
+            $error = "Please fill in all fields.";
         }
-    } else {
-        $error = "Please fill in all fields.";
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'verify_otp') {
+        $user_otp = trim($_POST['otp'] ?? '');
+        
+        if ($user_otp == $_SESSION['signup_otp']) {
+            // OTP matches, insert user
+            $data = $_SESSION['signup_data'];
+            $hash = password_hash($data['password'], PASSWORD_DEFAULT);
+            
+            try {
+                $stmt = $pdo->prepare("INSERT INTO users (name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, 'user')");
+                if ($stmt->execute([$data['name'], $data['email'], $data['phone'], $hash])) {
+                    // Auto login
+                    $_SESSION['user_id'] = $pdo->lastInsertId();
+                    $_SESSION['user_name'] = $data['name'];
+                    $_SESSION['user_role'] = 'user';
+                    
+                    // Clear session signup data
+                    unset($_SESSION['signup_step']);
+                    unset($_SESSION['signup_otp']);
+                    unset($_SESSION['signup_data']);
+                    
+                    header("Location: ../index.php");
+                    exit;
+                } else {
+                    $error = "Failed to register. Please try again.";
+                }
+            } catch (PDOException $e) {
+                $error = "Database error during registration.";
+            }
+        } else {
+            $error = "Invalid OTP. Please try again.";
+        }
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'resend_otp') {
+        $otp = rand(100000, 999999);
+        $_SESSION['signup_otp'] = $otp;
+        $data = $_SESSION['signup_data'];
+        
+        $subject = "Your New Verification OTP - Roshan Ka Tech";
+        $message = "Hello {$data['name']},\n\nYour new OTP for registration is: $otp\n\nPlease enter this to complete your sign up.\n\nThanks,\nRoshan Ka Tech";
+        $headers = "From: noreply@roshankatech.com";
+        @mail($data['email'], $subject, $message, $headers);
+        
+        $success = "A new OTP has been sent to your email.";
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'change_details') {
+        unset($_SESSION['signup_step']);
+        unset($_SESSION['signup_otp']);
+        unset($_SESSION['signup_data']);
+        $step = 1;
     }
 }
 
@@ -102,13 +160,23 @@ function getTrackHtml($images) {
             border-radius: 24px;
             padding: 3rem;
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
         }
         .auth-card h2 {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             color: var(--primary-color);
             font-size: 2rem;
+        }
+        .auth-disclaimer {
+            background: rgba(37, 99, 235, 0.08);
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            font-weight: 500;
         }
         .error-message {
             background: rgba(255, 0, 0, 0.1);
@@ -120,18 +188,35 @@ function getTrackHtml($images) {
             font-weight: 500;
             border: 1px solid rgba(255, 0, 0, 0.2);
         }
+        .success-message {
+            background: rgba(0, 128, 0, 0.1);
+            color: #2e7d32;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid rgba(0, 128, 0, 0.2);
+        }
         .auth-links {
             margin-top: 1.5rem;
             text-align: center;
             font-size: 0.95rem;
         }
-        .auth-links a {
+        .auth-links a, .auth-links button {
             color: var(--primary-color);
             font-weight: 600;
             transition: var(--transition);
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
         }
-        .auth-links a:hover {
+        .auth-links a:hover, .auth-links button:hover {
             color: var(--primary-hover);
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -148,35 +233,86 @@ function getTrackHtml($images) {
     <div class="bg-shape shape-3"></div>
 
     <div class="auth-container">
+        <a href="../index.php" class="back-btn-glass">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Home
+        </a>
         <div class="auth-card reveal active">
             <div class="text-center mb-4">
                 <a href="../index.php" class="logo" style="font-size: 1.5rem;">Roshan Ka Tech</a>
             </div>
-            <h2>Create Account</h2>
             
-            <?php if ($error): ?>
-                <div class="error-message"><?= htmlspecialchars($error) ?></div>
+            <?php if ($step === 1): ?>
+                <h2>Create Account</h2>
+                
+                <div class="auth-disclaimer">
+                    <strong>Important:</strong> Please provide your <u>actual Name and Mobile Number</u> to ensure smooth communication and fast payout processing during trades.
+                </div>
+                
+                <?php if ($error): ?>
+                    <div class="error-message"><?= htmlspecialchars($error) ?></div>
+                <?php endif; ?>
+
+                <form method="POST" action="">
+                    <input type="hidden" name="action" value="register">
+                    <div class="glass-form-group" style="margin-bottom: 1.25rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Full Name</label>
+                        <input type="text" name="name" class="glass-select" placeholder="Enter your full true name" style="width: 100%;" required>
+                    </div>
+                    <div class="glass-form-group" style="margin-bottom: 1.25rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Email Address</label>
+                        <input type="email" name="email" class="glass-select" placeholder="Enter your email" style="width: 100%;" required>
+                    </div>
+                    <div class="glass-form-group" style="margin-bottom: 1.25rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Mobile Number</label>
+                        <input type="tel" name="phone" class="glass-select" placeholder="Enter your active mobile number" style="width: 100%;" required>
+                    </div>
+                    <div class="glass-form-group" style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Password</label>
+                        <input type="password" name="password" class="glass-select" placeholder="Create a strong password" style="width: 100%;" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Continue to Verify</button>
+                </form>
+
+                <div class="auth-links">
+                    <p>Already have an account? <a href="login.php">Login here</a></p>
+                </div>
+            <?php else: ?>
+                <h2>Verify Email</h2>
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">
+                    We've sent a 6-digit OTP to <strong><?= htmlspecialchars($_SESSION['signup_data']['email'] ?? '') ?></strong>.
+                </p>
+                
+                <?php if ($success): ?>
+                    <div class="success-message"><?= htmlspecialchars($success) ?></div>
+                <?php endif; ?>
+                <?php if ($error): ?>
+                    <div class="error-message"><?= htmlspecialchars($error) ?></div>
+                <?php endif; ?>
+
+                <form method="POST" action="">
+                    <input type="hidden" name="action" value="verify_otp">
+                    <div class="glass-form-group" style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark); text-align: center;">Enter OTP</label>
+                        <input type="text" name="otp" class="glass-select" placeholder="e.g. 123456" style="width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 2px;" required maxlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Verify & Register</button>
+                </form>
+
+                <div class="auth-links" style="display: flex; justify-content: space-between; margin-top: 2rem;">
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="action" value="change_details">
+                        <button type="submit">Change Details</button>
+                    </form>
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="action" value="resend_otp">
+                        <button type="submit">Resend OTP</button>
+                    </form>
+                </div>
             <?php endif; ?>
-
-            <form method="POST" action="">
-                <div class="glass-form-group" style="margin-bottom: 1.25rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Full Name</label>
-                    <input type="text" name="name" class="glass-select" placeholder="Enter your full name" style="width: 100%;" required>
-                </div>
-                <div class="glass-form-group" style="margin-bottom: 1.25rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Email Address</label>
-                    <input type="email" name="email" class="glass-select" placeholder="Enter your email" style="width: 100%;" required>
-                </div>
-                <div class="glass-form-group" style="margin-bottom: 2rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Password</label>
-                    <input type="password" name="password" class="glass-select" placeholder="Create a password" style="width: 100%;" required>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Sign Up</button>
-            </form>
-
-            <div class="auth-links">
-                <p>Already have an account? <a href="login.php">Login here</a></p>
-            </div>
         </div>
     </div>
 

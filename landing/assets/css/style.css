@@ -228,6 +228,34 @@ p { color: var(--text-light); }
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
+.back-btn-glass {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: 100px;
+  color: var(--text-dark);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition);
+  z-index: 1000;
+  font-size: 0.95rem;
+}
+
+.back-btn-glass:hover {
+  background: var(--glass-bg-hover);
+  transform: translateX(-5px);
+  box-shadow: var(--glass-shadow-hover);
+}
+
 /* ===== FLOATING GLASS HEADER ===== */
 .header {
   position: fixed;

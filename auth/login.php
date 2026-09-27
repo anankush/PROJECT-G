@@ -127,7 +127,7 @@ function getTrackHtml($images) {
         .auth-links a:hover {
             color: var(--primary-hover);
         }
-    </style>
+      </style>
 </head>
 <body>
     <div class="floating-bg-container">
@@ -142,6 +142,13 @@ function getTrackHtml($images) {
     <div class="bg-shape shape-3"></div>
 
     <div class="auth-container">
+        <a href="../index.php" class="back-btn-glass">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Home
+        </a>
         <div class="auth-card reveal active">
             <div class="text-center mb-4">
                 <a href="../index.php" class="logo" style="font-size: 1.5rem;">Roshan Ka Tech</a>

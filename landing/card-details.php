@@ -85,6 +85,8 @@ function getTrackHtml($images) {
                     <li><a href="../how-it-works.php">How It Works</a></li>
                     <li><a href="../gift-cards.php">Buy / Sell Gift Cards</a></li>
                     <li><a href="../why-us.php">Why Us</a></li>
+                    <li><a href="../dev.php">Developers & Contribution</a></li>
+                    <li><a href="../contact.php">Contact</a></li>
                     <?php if ($isLoggedIn): ?>
                         <li><a href="../auth/logout.php" class="btn btn-outline" style="padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.9rem;">Logout</a></li>
                     <?php else: ?>
@@ -244,6 +246,8 @@ function getTrackHtml($images) {
     </script>
 </body>
 </html>
+
+
 
 
 

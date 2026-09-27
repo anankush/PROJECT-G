@@ -81,6 +81,7 @@ function getTrackHtml($images) {
                     <li><a href="how-it-works.php">How It Works</a></li>
                     <li><a href="gift-cards.php">Buy / Sell Gift Cards</a></li>
                     <li><a href="why-us.php">Why Us</a></li>
+                    <li><a href="dev.php">Developers & Contribution</a></li>
                     <li><a href="contact.php">Contact</a></li>
                     <?php if ($isLoggedIn): ?>
                         <li><a href="auth/logout.php" class="btn btn-outline" style="padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.9rem;">Logout</a></li>
@@ -150,7 +151,7 @@ function getTrackHtml($images) {
                     <ul class="footer-links">
                         <li><a href="how-it-works.php">How It Works</a></li>
                         <li><a href="gift-cards.php">Buy / Sell Gift Cards</a></li>
-                        <li><a href="why-us.php">Why Us</a></li>
+                        <li><a href="why-us.php">Why Us</a></li>`n                        <li><a href="dev.php">Developers & Contribution</a></li>
                     </ul>
                 </div>
 
@@ -164,7 +165,7 @@ function getTrackHtml($images) {
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2026 <strong>Roshan Ka Tech.</strong> All rights reserved.</p>`n                <p style="margin-top: 0.5rem; font-size: 0.85rem;"><a href="dev.php" style="color: var(--primary-color); font-weight: 500; text-decoration: none;">Developers & Contribution</a></p>
+                <p>&copy; 2026 <strong>Roshan Ka Tech.</strong> All rights reserved.</p>`n                
             </div>
         </div>
     </footer>
@@ -173,6 +174,8 @@ function getTrackHtml($images) {
     <script src="landing/assets/js/main.js?v=2.1"></script>
 </body>
 </html>
+
+
 
 
 

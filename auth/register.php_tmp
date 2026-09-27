@@ -62,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $error = "Database connection error.";
             }
-            }
         } else {
             $error = "Please fill in all fields.";
         }
@@ -275,13 +274,9 @@ function getTrackHtml($images) {
                         <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Mobile Number</label>
                         <input type="tel" name="phone" class="glass-select" placeholder="Enter your active mobile number" style="width: 100%;" required>
                     </div>
-                    <div class="glass-form-group" style="margin-bottom: 1.25rem;">
+                    <div class="glass-form-group" style="margin-bottom: 2rem;">
                         <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Password</label>
                         <input type="password" name="password" class="glass-select" placeholder="Create a strong password" style="width: 100%;" required>
-                    </div>
-                    <div class="glass-form-group" style="margin-bottom: 2rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Confirm Password</label>
-                        <input type="password" name="confirm_password" class="glass-select" placeholder="Re-enter your password" style="width: 100%;" required>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Continue to Verify</button>
                 </form>

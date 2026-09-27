@@ -11,33 +11,24 @@ if (isset($_SESSION['user_id'])) {
 }
 
 $error = '';
+$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
     
-    if ($email && $password) {
+    if ($email) {
         if ($pdo) {
             try {
-                $stmt = $pdo->prepare("SELECT id, name, password_hash, role FROM users WHERE email = ? LIMIT 1");
+                $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
                 $stmt->execute([$email]);
                 $user = $stmt->fetch();
                 
-                if ($user && password_verify($password, $user['password_hash'])) {
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_name'] = $user['name'];
-                    $_SESSION['user_role'] = $user['role'];
-                    
-                    if ($user['role'] === 'superadmin') {
-                        header("Location: ../super/index.php");
-                    } elseif ($user['role'] === 'admin') {
-                        header("Location: ../admin/index.php");
-                    } else {
-                        header("Location: ../index.php");
-                    }
-                    exit;
+                if ($user) {
+                    // Logic to send reset link goes here
+                    $success = "If an account exists for $email, a reset link will be sent shortly.";
                 } else {
-                    $error = "Invalid email or password.";
+                    // For security, do not reveal if the email exists or not
+                    $success = "If an account exists for $email, a reset link will be sent shortly.";
                 }
             } catch (PDOException $e) {
                 $error = "Database error. Please try again later.";
@@ -46,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Database connection error.";
         }
     } else {
-        $error = "Please fill in all fields.";
+        $error = "Please enter your email address.";
     }
 }
 
@@ -153,14 +144,15 @@ function getTrackHtml($images) {
             <?php if ($error): ?>
                 <div class="error-message"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
+            
+            <?php if ($success): ?>
+                <div class="success-message" style="background: rgba(0, 128, 0, 0.1); color: #2e7d32; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: center; font-weight: 500; border: 1px solid rgba(0, 128, 0, 0.2);"><?= htmlspecialchars($success) ?></div>
+            <?php endif; ?>
 
             <form method="POST" action="">
-                <div class="glass-form-group" style="margin-bottom: 1.25rem;">
+                <div class="glass-form-group" style="margin-bottom: 2rem;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Email Address</label>
-                    <input type="email" name="email" class="glass-select" placeholder="Enter your email" style="width: 100%;" required>
-                </div>
-                
-                    <input type="password" name="password" class="glass-select" placeholder="Enter your password" style="width: 100%;" required>
+                    <input type="email" name="email" class="glass-select" placeholder="Enter your email to receive a reset link" style="width: 100%;" required>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Send Reset Link</button>
             </form>

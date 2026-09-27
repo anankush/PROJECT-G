@@ -164,7 +164,7 @@ function getTrackHtml($images) {
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2026 <strong>Roshan Ka Tech.</strong> All rights reserved.</p>
+                <p>&copy; 2026 <strong>Roshan Ka Tech.</strong> All rights reserved.</p>`n                <p style="margin-top: 0.5rem; font-size: 0.85rem;"><a href="dev.php" style="color: var(--primary-color); font-weight: 500; text-decoration: none;">Developers & Contribution</a></p>
             </div>
         </div>
     </footer>
@@ -173,6 +173,7 @@ function getTrackHtml($images) {
     <script src="landing/assets/js/main.js?v=2.1"></script>
 </body>
 </html>
+
 
 
 

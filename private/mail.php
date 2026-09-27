@@ -45,10 +45,8 @@ function send_google_mail($to, $subject, $body) {
     $ch = curl_init($google_script_url);
     curl_setopt($ch, CURLOPT_POST, 1);
     
-    // Use JSON instead of URL-encoded to prevent HTML breaking during transit
-    $payload = json_encode($data);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+    // Send data as URL-encoded so it works with e.parameter in Google Script
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
     
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);

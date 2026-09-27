@@ -1,4 +1,9 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$isLoggedIn = isset($_SESSION['user_id']);
+
 // Centralized Database and Logic
 require_once __DIR__ . '/private/db.php';
 require_once __DIR__ . '/private/giftcard_functions.php';
@@ -77,6 +82,12 @@ function getTrackHtml($images) {
                     <li><a href="gift-cards.php">Buy / Sell Gift Cards</a></li>
                     <li><a href="why-us.php">Why Us</a></li>
                     <li><a href="contact.php">Contact</a></li>
+                    <?php if ($isLoggedIn): ?>
+                        <li><a href="auth/logout.php" class="btn btn-outline" style="padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.9rem;">Logout</a></li>
+                    <?php else: ?>
+                        <li><a href="auth/login.php" style="font-weight: 600;">Login</a></li>
+                        <li><a href="auth/register.php" class="btn btn-primary" style="padding: 0.4rem 1.25rem; color: white; border-radius: 8px; font-size: 0.9rem;">Sign Up</a></li>
+                    <?php endif; ?>
                 </ul>
             </nav>
             <button class="mobile-menu-btn" aria-label="Open Menu">

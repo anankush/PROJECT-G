@@ -21,7 +21,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /htdocs/ # InfinityFree hosts files inside the htdocs folder
+          server-dir: /roshankatech1.freedev.app/htdocs/ # Deployment path for the specific subdomain
           exclude: |
             **/.git*
             **/.git*/**

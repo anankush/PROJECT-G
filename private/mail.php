@@ -41,6 +41,12 @@ function send_google_mail($to, $subject, $body) {
         return true;
     }
     
+    // Prepare and clean the URL (in case of spaces or missing https:// in GitHub Secrets)
+    $url = trim($google_script_url);
+    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+        $url = "https://" . $url;
+    }
+    
     // Prepare data for Google Apps Script
     $data = [
         'email' => $to,
@@ -48,7 +54,7 @@ function send_google_mail($to, $subject, $body) {
         'body' => $body
     ];
     
-    $ch = curl_init($google_script_url);
+    $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_POST, 1);
     
     // Send data as URL-encoded so it works with e.parameter in Google Script
@@ -64,8 +70,20 @@ function send_google_mail($to, $subject, $body) {
     curl_close($ch);
     
     // Log the exact response for debugging
-    $log_msg = date('[Y-m-d H:i:s] ') . "URL: " . substr($google_script_url, 0, 30) . "... | cURL Error: $curl_error | Response: $response\n";
+    $log_msg = date('[Y-m-d H:i:s] ') . "URL: " . substr($url, 0, 30) . "... | cURL Error: $curl_error | Response: $response\n";
     @file_put_contents(__DIR__ . '/mail_debug.log', $log_msg, FILE_APPEND);
+    
+    // Auto-Fallback to native mail if cURL is completely blocked by InfinityFree firewall (DNS resolve error)
+    if ($curl_error && stripos($curl_error, 'resolve host') !== false) {
+        $headers = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $headers .= "From: Roshan Ka Tech <noreply@roshankatech.com>\r\n";
+        $fallback_success = @mail($to, $subject, $body, $headers);
+        if ($fallback_success) {
+            return true; // Sent via native mail as fallback
+        }
+        return "cURL Error (Host Blocked by InfinityFree) AND Native PHP Mail also failed.";
+    }
     
     if ($curl_error) {
         return "cURL Error: " . $curl_error;

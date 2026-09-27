@@ -45,16 +45,20 @@ function getTrackHtml($images) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="landing/assets/css/style.css?v=2.0">
+    <link rel="stylesheet" href="landing/assets/css/style.css?v=2.1">
 </head>
 <body>
 
     <!-- Dynamic Floating Background Cards -->
     <div class="floating-bg-container">
-        <!-- 3 Parallel Tracks that fill the screen vertically -->
-        <div class="bg-marquee-track track-top"><?= getTrackHtml($bgImages) ?></div>
-        <div class="bg-marquee-track track-middle"><?= getTrackHtml($bgImages) ?></div>
-        <div class="bg-marquee-track track-bottom"><?= getTrackHtml($bgImages) ?></div>
+        <!-- 7 Parallel Tracks to guarantee full vertical coverage on massive desktop monitors -->
+        <div class="bg-marquee-track"><?= getTrackHtml($bgImages) ?></div>
+        <div class="bg-marquee-track"><?= getTrackHtml($bgImages) ?></div>
+        <div class="bg-marquee-track"><?= getTrackHtml($bgImages) ?></div>
+        <div class="bg-marquee-track"><?= getTrackHtml($bgImages) ?></div>
+        <div class="bg-marquee-track"><?= getTrackHtml($bgImages) ?></div>
+        <div class="bg-marquee-track"><?= getTrackHtml($bgImages) ?></div>
+        <div class="bg-marquee-track"><?= getTrackHtml($bgImages) ?></div>
     </div>
 
     <!-- Background Glassmorphism Blobs -->
@@ -258,6 +262,6 @@ function getTrackHtml($images) {
     </footer>
 
     <!-- Custom JS -->
-    <script src="landing/assets/js/main.js?v=2.0"></script>
+    <script src="landing/assets/js/main.js?v=2.1"></script>
 </body>
 </html>

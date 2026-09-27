@@ -1,0 +1,29 @@
+name: Deploy to InfinityFree FTP
+
+on:
+  push:
+    branches:
+      - main # When code is pushed to the main branch, this workflow will trigger
+
+jobs:
+  ftp-deploy:
+    name: Deploy Website
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Sync files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /htdocs/ # InfinityFree hosts files inside the htdocs folder
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            *.md

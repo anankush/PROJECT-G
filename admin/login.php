@@ -24,14 +24,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $user = $stmt->fetch();
                 
                 if ($user && password_verify($password, $user['password_hash'])) {
-                    if ($user['role'] !== 'user') {
-                        $error = "Access denied. Admins must log in through the admin portal.";
+                    if ($user['role'] === 'user') {
+                        $error = "Access denied. This portal is for administrators only.";
                     } else {
                         $_SESSION['user_id'] = $user['id'];
                         $_SESSION['user_name'] = $user['name'];
                         $_SESSION['user_role'] = $user['role'];
                         
-                        header("Location: ../index.php");
+                        if ($user['role'] === 'superadmin') {
+                            header("Location: ../super/index.php");
+                        } else {
+                            header("Location: index.php");
+                        }
                         exit;
                     }
                 } else {
@@ -146,7 +150,8 @@ function getTrackHtml($images) {
             <div class="text-center mb-4">
                 <a href="../index.php" class="logo" style="font-size: 1.5rem;">Roshan Ka Tech</a>
             </div>
-            <h2>Welcome Back</h2>
+            <h2>Admin Portal</h2>
+            <p style="text-align: center; color: var(--text-light); margin-top: -1.5rem; margin-bottom: 2rem;">Authorized Personnel Only</p>
             
             <?php if ($error): ?>
                 <div class="error-message"><?= htmlspecialchars($error) ?></div>
@@ -154,22 +159,17 @@ function getTrackHtml($images) {
 
             <form method="POST" action="">
                 <div class="glass-form-group" style="margin-bottom: 1.25rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Email Address</label>
-                    <input type="email" name="email" class="glass-select" placeholder="Enter your email" style="width: 100%;" required>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Admin Email</label>
+                    <input type="email" name="email" class="glass-select" placeholder="Enter admin email" style="width: 100%;" required>
                 </div>
                 <div class="glass-form-group" style="margin-bottom: 2rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                         <label style="font-weight: 600; color: var(--text-dark); margin: 0;">Password</label>
-                        <a href="forgot-password.php" style="font-size: 0.85rem; color: var(--primary-color); font-weight: 600; text-decoration: none;">Forgot Password?</a>
                     </div>
-                    <input type="password" name="password" class="glass-select" placeholder="Enter your password" style="width: 100%;" required>
+                    <input type="password" name="password" class="glass-select" placeholder="Enter admin password" style="width: 100%;" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Login</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; background: linear-gradient(135deg, #1e293b, #0f172a);">Admin Login</button>
             </form>
-
-            <div class="auth-links">
-                <p>Don't have an account? <a href="register.php">Sign up here</a></p>
-            </div>
         </div>
     </div>
 

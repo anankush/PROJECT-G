@@ -1,0 +1,1 @@
+<?php`nif (session_status() === PHP_SESSION_NONE) session_start();`nif (!isset(`$_SESSION['user_role']) || `$_SESSION['user_role'] === 'user') {`n    header('Location: login.php');`n    exit;`n}`n?>`n<!DOCTYPE html>`n<html><body><h1>Welcome Admin, <?= htmlspecialchars(`$_SESSION['user_name']) ?></h1><a href="../auth/logout.php">Logout</a></body></html>

@@ -33,7 +33,8 @@ if (is_dir($imageDir)) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#f4f7fb">
     <title><?= $card ? htmlspecialchars($card['brand_name']) . ' | Roshan Ka Tech' : 'Card Not Found | Roshan Ka Tech' ?></title>
     
     <!-- Google Fonts -->

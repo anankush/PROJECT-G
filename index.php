@@ -24,7 +24,8 @@ if (is_dir($imageDir)) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#f4f7fb">
     <title>Roshan Ka Tech | Sell Your Gift Cards</title>
     
     <!-- Google Fonts -->

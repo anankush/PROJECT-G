@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $message = "Hello {$user['name']},\n\nYour OTP for login is: $otp\n\nPlease enter this to access your account.\n\nThanks,\nRoshan Ka Tech";
                             $headers = "From: noreply@roshankatech.com";
                             
-                            @mail($user['email'], $subject, $message, $headers);
+                            send_google_mail($user['email'], $subject, $message);
                             
                             $_SESSION['login_step'] = 2;
                             $step = 2;
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $subject = "Your New Login Verification OTP - Roshan Ka Tech";
             $message = "Hello {$u['name']},\n\nYour new OTP for login is: $otp\n\nPlease enter this to access your account.\n\nThanks,\nRoshan Ka Tech";
             $headers = "From: noreply@roshankatech.com";
-            @mail($u['email'], $subject, $message, $headers);
+            send_google_mail($u['email'], $subject, $message);
             
             $success = "A new OTP has been sent to your registered email address.";
         } else {

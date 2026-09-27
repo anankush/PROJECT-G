@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $message = "Hello $name,\n\nYour OTP for registration is: $otp\n\nPlease enter this to complete your sign up.\n\nThanks,\nRoshan Ka Tech";
                         $headers = "From: noreply@roshankatech.com";
                         
-                        @mail($email, $subject, $message, $headers);
+                        send_google_mail($email, $subject, $message);
                         
                         $_SESSION['signup_step'] = 2;
                         $step = 2;
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $subject = "Your New Verification OTP - Roshan Ka Tech";
         $message = "Hello {$data['name']},\n\nYour new OTP for registration is: $otp\n\nPlease enter this to complete your sign up.\n\nThanks,\nRoshan Ka Tech";
         $headers = "From: noreply@roshankatech.com";
-        @mail($data['email'], $subject, $message, $headers);
+        send_google_mail($data['email'], $subject, $message);
         
         $success = "A new OTP has been sent to your email.";
     } elseif (isset($_POST['action']) && $_POST['action'] === 'change_details') {

@@ -69,6 +69,28 @@ function send_google_mail($to, $subject, $body) {
     $curl_error = curl_error($ch);
     curl_close($ch);
     
+    // Fallback: If cURL is blocked, try file_get_contents
+    if ($curl_error || $response === false) {
+        $options = [
+            'http' => [
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'POST',
+                'content' => http_build_query($data),
+                'ignore_errors' => true
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ]
+        ];
+        $context  = stream_context_create($options);
+        $fgc_response = @file_get_contents($url, false, $context);
+        
+        if ($fgc_response !== false && stripos($fgc_response, 'Success') !== false) {
+            return true; // Successfully sent using file_get_contents
+        }
+    }
+    
     // Log the exact response for debugging
     $log_msg = date('[Y-m-d H:i:s] ') . "URL: " . substr($url, 0, 30) . "... | cURL Error: $curl_error | Response: $response\n";
     @file_put_contents(__DIR__ . '/mail_debug.log', $log_msg, FILE_APPEND);

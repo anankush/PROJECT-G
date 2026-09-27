@@ -109,14 +109,16 @@ function getTrackHtml($images) {
             margin-bottom: 2rem;
         }
         .collab-icon {
-            font-size: 2.5rem;
             color: var(--primary-color);
-            opacity: 0.5;
-            animation: pulse-icon 2s infinite alternate;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-x 2.5s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 0 15px rgba(37, 99, 235, 0.4));
         }
-        @keyframes pulse-icon {
-            0% { transform: scale(1); opacity: 0.3; }
-            100% { transform: scale(1.2); opacity: 0.8; }
+        @keyframes pulse-x {
+            0% { transform: scale(1); opacity: 0.7; filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.3)); }
+            100% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 25px rgba(37, 99, 235, 0.6)); }
         }
         .social-btns {
             display: flex;
@@ -154,7 +156,6 @@ function getTrackHtml($images) {
         @media (max-width: 768px) {
             .collab-wrapper { padding: 2.5rem 1.5rem; }
             .collab-grid { gap: 2rem; flex-direction: column; }
-            .collab-icon { transform: rotate(45deg); } /* Plus symbol looks cool rotated */
         }
     </style>
 </head>
@@ -224,9 +225,9 @@ function getTrackHtml($images) {
                 
                 <!-- Collaboration Icon -->
                 <div class="collab-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                 </div>
 

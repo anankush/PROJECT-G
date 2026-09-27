@@ -68,7 +68,7 @@ img {
 
 .floating-bg-card {
   position: absolute;
-  width: 180px;
+  width: 320px; /* Increased size significantly for better visual presence */
   opacity: 0.35; /* Increased opacity to guarantee visibility */
   border-radius: 16px;
   filter: grayscale(10%) blur(4px); /* Slightly less blur */
@@ -861,6 +861,6 @@ p { color: var(--text-light); }
     overflow-x: hidden;
   }
   .floating-bg-card {
-    width: 120px; /* Smaller bg cards on mobile */
+    width: 220px; /* Increased mobile size */
   }
 }

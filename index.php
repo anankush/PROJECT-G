@@ -34,7 +34,7 @@ if (is_dir($imageDir)) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="landing/assets/css/style.css?v=1.1">
+    <link rel="stylesheet" href="landing/assets/css/style.css?v=1.2">
 </head>
 <body>
 
@@ -246,6 +246,6 @@ if (is_dir($imageDir)) {
     </footer>
 
     <!-- Custom JS -->
-    <script src="landing/assets/js/main.js?v=1.1"></script>
+    <script src="landing/assets/js/main.js?v=1.2"></script>
 </body>
 </html>

@@ -92,7 +92,7 @@ function getTrackHtml($images) {
     <section class="hero">
         <div class="container hero-content reveal">
             <h1>Buy & Sell Gift Cards.<br>Fast & Secure.</h1>
-            <p>Buy premium gift cards at great rates or turn your unused gift cards into real money with <strong>Roshan Ka Tech.</strong></p>
+            <p>Buy premium gift cards at great rates or turn your unused gift cards into real money with <a href="https://www.youtube.com/@RoshanKaTech1" target="_blank" style="color: var(--primary-color);"><strong>Roshan Ka Tech.</strong></a></p>
             <div class="hero-cta">
                 <a href="#gift-cards" class="btn btn-primary">Start Trading</a>
                 <a href="#how-it-works" class="btn btn-outline">How It Works</a>

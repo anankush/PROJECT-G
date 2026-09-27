@@ -148,7 +148,7 @@ function getTrackHtml($images) {
             <div class="text-center mb-4">
                 <a href="../index.php" class="logo" style="font-size: 1.5rem;">Roshan Ka Tech</a>
             </div>
-            <h2>Welcome Back</h2>
+            <h2>Reset Password</h2>
             
             <?php if ($error): ?>
                 <div class="error-message"><?= htmlspecialchars($error) ?></div>
@@ -159,18 +159,14 @@ function getTrackHtml($images) {
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Email Address</label>
                     <input type="email" name="email" class="glass-select" placeholder="Enter your email" style="width: 100%;" required>
                 </div>
-                <div class="glass-form-group" style="margin-bottom: 2rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                        <label style="font-weight: 600; color: var(--text-dark); margin: 0;">Password</label>
-                        <a href="forgot-password.php" style="font-size: 0.85rem; color: var(--primary-color); font-weight: 600; text-decoration: none;">Forgot Password?</a>
-                    </div>
+                
                     <input type="password" name="password" class="glass-select" placeholder="Enter your password" style="width: 100%;" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Login</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Send Reset Link</button>
             </form>
 
             <div class="auth-links">
-                <p>Don't have an account? <a href="register.php">Sign up here</a></p>
+                <p>Remembered your password? <a href="login.php">Login here</a></p>
             </div>
         </div>
     </div>
@@ -178,3 +174,4 @@ function getTrackHtml($images) {
     <script src="../landing/assets/js/main.js?v=2.1"></script>
 </body>
 </html>
+

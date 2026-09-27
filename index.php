@@ -110,16 +110,15 @@ function getTrackHtml($images) {
     <!-- Supported Gift Cards Section (Dynamic) -->
     <section id="gift-cards" class="section gift-cards">
         <div class="container">
-            <div class="reveal" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+            <div class="reveal" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                 <div>
                     <h2 style="margin-bottom: 0.25rem;">Trade Gift Cards</h2>
                     <p>Select your gift card brand below to buy or sell.</p>
                 </div>
-                <a href="gift-cards.php" class="btn btn-outline" style="padding: 0.6rem 1.25rem; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                <a href="gift-cards.php" class="view-all-link" style="color: var(--primary-color); font-weight: 600; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.4rem; padding-bottom: 0.2rem;">
                     View All
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
                 </a>
             </div>

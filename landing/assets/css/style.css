@@ -938,3 +938,12 @@ p { color: var(--text-light); }
   color: var(--primary-hover);
   transform: translateX(4px);
 }
+
+/* ===== VIEW ALL LINK ===== */
+.view-all-link {
+  transition: var(--transition);
+}
+.view-all-link:hover {
+  color: var(--primary-hover);
+  transform: translateX(4px);
+}

@@ -66,7 +66,7 @@ img {
   pointer-events: none;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* THIS FIXES THE GAP: Start tracks from the far left */
   justify-content: center;
   gap: 8rem; /* Vertical spacing between tracks */
   /* Rotation will be applied via JS to ensure random diagonals */
@@ -92,7 +92,7 @@ img {
 
 @keyframes bgMarqueeScroll {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); } /* Exactly half to create seamless loop with cloned set */
+  100% { transform: translateX(-25%); } /* Move exactly 1 out of 4 sets for a perfect seamless loop */
 }
 
 .bg-shape {

@@ -27,7 +27,8 @@ function getTrackHtml($images) {
     foreach($images as $img) {
         $html .= '<img src="' . htmlspecialchars($img) . '" class="floating-bg-card" alt="floating bg">';
     }
-    return $html . $html; // Duplicate for seamless infinite marquee
+    // Quadruple the set to absolutely guarantee it never leaves an empty gap on any screen size
+    return $html . $html . $html . $html;
 }
 ?>
 <!DOCTYPE html>
@@ -44,7 +45,7 @@ function getTrackHtml($images) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="landing/assets/css/style.css?v=1.8">
+    <link rel="stylesheet" href="landing/assets/css/style.css?v=1.9">
 </head>
 <body>
 
@@ -257,6 +258,6 @@ function getTrackHtml($images) {
     </footer>
 
     <!-- Custom JS -->
-    <script src="landing/assets/js/main.js?v=1.8"></script>
+    <script src="landing/assets/js/main.js?v=1.9"></script>
 </body>
 </html>

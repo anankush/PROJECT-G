@@ -36,7 +36,8 @@ function getTrackHtml($images) {
     foreach($images as $img) {
         $html .= '<img src="' . htmlspecialchars($img) . '" class="floating-bg-card" alt="floating bg">';
     }
-    return $html . $html;
+    // Quadruple the set to absolutely guarantee it never leaves an empty gap on any screen size
+    return $html . $html . $html . $html;
 }
 ?>
 <!DOCTYPE html>
@@ -53,7 +54,7 @@ function getTrackHtml($images) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css?v=1.8">
+    <link rel="stylesheet" href="assets/css/style.css?v=1.9">
 </head>
 <body>
 
@@ -184,7 +185,7 @@ function getTrackHtml($images) {
         </div>
     </footer>
 
-    <script src="assets/js/main.js?v=1.8"></script>
+    <script src="assets/js/main.js?v=1.9"></script>
     <script>
         // Logic to show "Sell Now" button only after a value is selected
         document.addEventListener('DOMContentLoaded', function() {

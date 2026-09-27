@@ -80,12 +80,21 @@ img {
   margin-left: -160px;
 }
 
-@keyframes diagonalInfiniteScroll {
+@keyframes diagonalScroll1 {
   0% { 
     transform: translate(calc(-100vw + var(--track-x, 0vw)), 100vh) rotate(120deg); 
   }
   100% { 
     transform: translate(calc(100vw + var(--track-x, 0vw)), -100vh) rotate(120deg); 
+  }
+}
+
+@keyframes diagonalScroll2 {
+  0% { 
+    transform: translate(calc(-100vw + var(--track-x, 0vw)), -100vh) rotate(120deg); 
+  }
+  100% { 
+    transform: translate(calc(100vw + var(--track-x, 0vw)), 100vh) rotate(120deg); 
   }
 }
 

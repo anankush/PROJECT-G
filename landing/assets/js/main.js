@@ -4,6 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (bgCards.length > 0) {
         const totalDuration = 50; // Super slow animation (50 seconds per cycle)
         
+        // Pick a random animation path and direction for this page load
+        const animations = ['diagonalScroll1', 'diagonalScroll2'];
+        const directions = ['normal', 'reverse'];
+        const chosenAnim = animations[Math.floor(Math.random() * animations.length)];
+        const chosenDir = directions[Math.floor(Math.random() * directions.length)];
+        
         bgCards.forEach((card, index) => {
             // Create a track offset so they don't all follow the exact same line
             // This spreads them across 3 different parallel tracks (-35vw, 0vw, +35vw)
@@ -15,8 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Pass the track offset to CSS via custom property
             card.style.setProperty('--track-x', `${trackOffset}vw`);
             
-            // Apply the diagonal scroll animation
-            card.style.animation = `diagonalInfiniteScroll ${totalDuration}s linear ${delay}s infinite`;
+            // Apply the randomized diagonal scroll animation
+            card.style.animation = `${chosenAnim} ${totalDuration}s linear ${delay}s infinite ${chosenDir}`;
         });
     }
 

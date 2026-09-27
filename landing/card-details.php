@@ -216,7 +216,7 @@ function getTrackHtml($images) {
                 alert("Please select a card value first.");
                 return;
             }
-            document.getElementById('signup-modal').classList.add('active');
+            window.location.href = '../auth/login.php';
         }
 
         function proceedToTrade(action) {
@@ -234,18 +234,10 @@ function getTrackHtml($images) {
             window.location.href = "../dashboard/sell-process.php?card_id=" + cardId + "&value=" + val;
         }
 
-        function closeSignupModal() {
-            document.getElementById('signup-modal').classList.remove('active');
-        }
-
-        // Close modal when clicking outside of it
-        document.getElementById('signup-modal')?.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeSignupModal();
-            }
-        });
+        );
     </script>
 </body>
 </html>
+
 
 

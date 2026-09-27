@@ -110,9 +110,18 @@ function getTrackHtml($images) {
     <!-- Supported Gift Cards Section (Dynamic) -->
     <section id="gift-cards" class="section gift-cards">
         <div class="container">
-            <div class="text-center reveal">
-                <h2>Trade Gift Cards</h2>
-                <p>Select your gift card brand below to buy or sell.</p>
+            <div class="reveal" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h2 style="margin-bottom: 0.25rem;">Trade Gift Cards</h2>
+                    <p>Select your gift card brand below to buy or sell.</p>
+                </div>
+                <a href="gift-cards.php" class="btn btn-outline" style="padding: 0.6rem 1.25rem; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    View All
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
             </div>
             
             <div class="cards-grid reveal">
@@ -126,8 +135,11 @@ function getTrackHtml($images) {
 
                 <?php else: ?>
                     
-                    <!-- Dynamic Loop: Display active gift cards -->
-                    <?php foreach ($giftCards as $card): ?>
+                    <!-- Dynamic Loop: Display active gift cards (Limit to 8 on homepage) -->
+                    <?php 
+                    $displayCards = array_slice($giftCards, 0, 8);
+                    foreach ($displayCards as $card): 
+                    ?>
                         <div class="card">
                             <div class="card-img-wrapper">
                                 <img src="<?= htmlspecialchars($card['image_path'] ?? '') ?>" alt="<?= htmlspecialchars($card['brand_name']) ?> Gift Card" loading="lazy">

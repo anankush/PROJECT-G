@@ -31,9 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($user['role'] !== 'user') {
                             $error = "Access denied. Admins must log in through the admin portal.";
                         } else {
-                            // Generate OTP for login
                             $otp = rand(100000, 999999);
-                            $_SESSION['login_otp'] = $otp;
+                            $expires_at = date('Y-m-d H:i:s', time() + 120); // exactly 2 mins
+                            
+                            // Delete old OTPs for this email to maintain 1 active OTP
+                            $stmt = $pdo->prepare("DELETE FROM otps WHERE email = ? AND type = 'login'");
+                            $stmt->execute([$user['email']]);
+                            
+                            // Insert into Database
+                            $stmt = $pdo->prepare("INSERT INTO otps (email, otp_code, type, expires_at) VALUES (?, ?, 'login', ?)");
+                            $stmt->execute([$user['email'], $otp, $expires_at]);
+                            
                             $_SESSION['pending_user'] = [
                                 'id' => $user['id'],
                                 'name' => $user['name'],
@@ -44,15 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             // Send Email OTP
                             $subject = "Your Login Verification OTP - Roshan Ka Tech";
                             $message = get_email_template($user['name'], $otp);
-                            
                             $mail_status = send_google_mail($user['email'], $subject, $message);
                             
-                            if ($mail_status === false) {
-                                $error = "Failed to send OTP email. Please check configuration.";
-                            } else {
+                            if ($mail_status !== false) {
                                 $_SESSION['login_step'] = 2;
                                 $step = 2;
                                 $success = "OTP has been sent to your registered email address.";
+                            } else {
+                                $error = "Failed to send OTP email. Please check configuration.";
                             }
                         }
                     } else {
@@ -69,34 +76,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif (isset($_POST['action']) && $_POST['action'] === 'verify_otp') {
         $user_otp = trim($_POST['otp'] ?? '');
+        $u = $_SESSION['pending_user'] ?? [];
+        $email = $u['email'] ?? '';
         
-        if (isset($_SESSION['login_otp']) && $user_otp == $_SESSION['login_otp']) {
-            $u = $_SESSION['pending_user'];
-            
-            // Set final session variables
-            $_SESSION['user_id'] = $u['id'];
-            $_SESSION['user_name'] = $u['name'];
-            $_SESSION['user_role'] = $u['role'];
-            
-            // Clear pending login data
-            unset($_SESSION['login_otp']);
-            unset($_SESSION['pending_user']);
-            unset($_SESSION['login_step']);
-            
-            header("Location: ../index.php");
-            exit;
+        if ($email) {
+            try {
+                // Verify OTP is correct and NOT expired
+                $stmt = $pdo->prepare("SELECT id FROM otps WHERE email = ? AND otp_code = ? AND type = 'login' AND expires_at >= NOW()");
+                $stmt->execute([$email, $user_otp]);
+                
+                if ($stmt->fetch()) {
+                    // OTP is Valid - Delete it IMMEDIATELY so it can't be reused
+                    $stmt = $pdo->prepare("DELETE FROM otps WHERE email = ? AND type = 'login'");
+                    $stmt->execute([$email]);
+                    
+                    // Set final session variables
+                    $_SESSION['user_id'] = $u['id'];
+                    $_SESSION['user_name'] = $u['name'];
+                    $_SESSION['user_role'] = $u['role'];
+                    
+                    // Clear pending login data
+                    unset($_SESSION['pending_user'], $_SESSION['login_step']);
+                    
+                    header("Location: ../index.php");
+                    exit;
+                } else {
+                    $error = "Invalid or Expired OTP.";
+                }
+            } catch (PDOException $e) {
+                $error = "Database error during login.";
+            }
         } else {
-            $error = "Invalid OTP. Please try again.";
+            $error = "Session expired. Please login again.";
         }
     } elseif (isset($_POST['action']) && $_POST['action'] === 'resend_otp') {
-        if (isset($_SESSION['pending_user'])) {
+        $u = $_SESSION['pending_user'] ?? [];
+        $email = $u['email'] ?? '';
+        
+        if ($email) {
             $otp = rand(100000, 999999);
-            $_SESSION['login_otp'] = $otp;
-            $u = $_SESSION['pending_user'];
+            $expires_at = date('Y-m-d H:i:s', time() + 120); // exactly 2 mins
+            
+            // Delete old, insert new
+            $stmt = $pdo->prepare("DELETE FROM otps WHERE email = ? AND type = 'login'");
+            $stmt->execute([$email]);
+            $stmt = $pdo->prepare("INSERT INTO otps (email, otp_code, type, expires_at) VALUES (?, ?, 'login', ?)");
+            $stmt->execute([$email, $otp, $expires_at]);
             
             $subject = "Your New Login Verification OTP - Roshan Ka Tech";
             $message = get_email_template($u['name'], $otp);
-            $mail_status = send_google_mail($u['email'], $subject, $message);
+            $mail_status = send_google_mail($email, $subject, $message);
             
             if ($mail_status === false) {
                 $error = "Failed to resend OTP email.";
@@ -105,14 +134,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             // Session expired or invalid
-            unset($_SESSION['login_step']);
+            unset($_SESSION['login_step'], $_SESSION['pending_user']);
             $step = 1;
             $error = "Session expired. Please login again.";
         }
     } elseif (isset($_POST['action']) && $_POST['action'] === 'cancel_login') {
-        unset($_SESSION['login_step']);
-        unset($_SESSION['login_otp']);
-        unset($_SESSION['pending_user']);
+        unset($_SESSION['login_step'], $_SESSION['pending_user']);
         $step = 1;
     }
 }
@@ -146,7 +173,7 @@ function getTrackHtml($images) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Roshan Ka Tech</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../landing/assets/css/style.css?v=2.4">
+    <link rel="stylesheet" href="../landing/assets/css/style.css?v=2.6">
     <style>
         .auth-container {
             min-height: 100vh;
@@ -183,7 +210,6 @@ function getTrackHtml($images) {
             text-align: center;
             font-weight: 500;
             border: 1px solid rgba(255, 0, 0, 0.2);
-            animation: fadeIn 0.3s ease-out;
         }
         .success-message {
             background: rgba(0, 128, 0, 0.1);
@@ -194,7 +220,6 @@ function getTrackHtml($images) {
             text-align: center;
             font-weight: 500;
             border: 1px solid rgba(0, 128, 0, 0.2);
-            animation: fadeIn 0.3s ease-out;
         }
         .auth-links {
             margin-top: 1.5rem;
@@ -252,13 +277,21 @@ function getTrackHtml($images) {
             height: 16px;
             cursor: pointer;
         }
-        .btn-loading {
-            opacity: 0.8;
-            pointer-events: none;
+        .countdown-timer {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #d32f2f;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 0, 0, 0.05);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px dashed rgba(211, 47, 47, 0.3);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .btn-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -295,7 +328,7 @@ function getTrackHtml($images) {
                     <div class="error-message"><?= htmlspecialchars($error) ?></div>
                 <?php endif; ?>
 
-                <form method="POST" action="" onsubmit="showLoading(this, 'login-btn')">
+                <form method="POST" action="">
                     <input type="hidden" name="action" value="login">
                     
                     <div class="glass-form-group" style="margin-bottom: 1.25rem;">
@@ -328,9 +361,7 @@ function getTrackHtml($images) {
                         <a href="forgot-password.php" style="font-size: 0.9rem; color: var(--primary-color); font-weight: 600; text-decoration: none; transition: var(--transition);">Forgot Password?</a>
                     </div>
 
-                    <button type="submit" id="login-btn" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; gap: 0.5rem;">
-                        <span>Login</span>
-                    </button>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Login</button>
                 </form>
 
                 <div class="auth-links">
@@ -340,9 +371,11 @@ function getTrackHtml($images) {
             <?php else: ?>
                 <!-- OTP Verification Step -->
                 <h2>Verify Login</h2>
-                <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">
-                    We've sent a 6-digit OTP to your registered email address <strong><?= htmlspecialchars($_SESSION['pending_user']['email'] ?? '') ?></strong>.
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 1.5rem;">
+                    We've sent a 6-digit OTP to your email <strong><?= htmlspecialchars($_SESSION['pending_user']['email'] ?? '') ?></strong>.
                 </p>
+                
+                <div class="countdown-timer" id="countdown">02:00</div>
                 
                 <?php if ($success): ?>
                     <div class="success-message"><?= htmlspecialchars($success) ?></div>
@@ -351,15 +384,13 @@ function getTrackHtml($images) {
                     <div class="error-message"><?= htmlspecialchars($error) ?></div>
                 <?php endif; ?>
 
-                <form method="POST" action="" onsubmit="showLoading(this, 'verify-btn')">
+                <form method="POST" action="">
                     <input type="hidden" name="action" value="verify_otp">
                     <div class="glass-form-group" style="margin-bottom: 2rem;">
                         <label for="otp" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark); text-align: center;">Enter OTP</label>
-                        <input type="text" id="otp" name="otp" class="glass-select" placeholder="e.g. 123456" style="width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 2px;" required maxlength="6">
+                        <input type="text" id="otp-input" name="otp" class="glass-select" placeholder="e.g. 123456" style="width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 2px;" required maxlength="6">
                     </div>
-                    <button type="submit" id="verify-btn" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; gap: 0.5rem;">
-                        <span>Verify & Login</span>
-                    </button>
+                    <button type="submit" id="verify-btn" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Verify & Login</button>
                 </form>
 
                 <div class="auth-links" style="display: flex; justify-content: space-between; margin-top: 2rem;">
@@ -367,11 +398,33 @@ function getTrackHtml($images) {
                         <input type="hidden" name="action" value="cancel_login">
                         <button type="submit">Back to Login</button>
                     </form>
-                    <form method="POST" style="display: inline;" onsubmit="showLoading(this, 'resend-btn', true)">
+                    <form method="POST" style="display: inline;">
                         <input type="hidden" name="action" value="resend_otp">
-                        <button type="submit" id="resend-btn">Resend OTP</button>
+                        <button type="submit" id="resend-btn" class="btn-disabled">Resend OTP (Wait)</button>
                     </form>
                 </div>
+                
+                <script>
+                    let timeInSecs = 120;
+                    let timer = setInterval(function() {
+                        timeInSecs--;
+                        let m = Math.floor(timeInSecs / 60).toString().padStart(2, '0');
+                        let s = (timeInSecs % 60).toString().padStart(2, '0');
+                        document.getElementById('countdown').innerText = m + ":" + s;
+                        
+                        if (timeInSecs <= 0) {
+                            clearInterval(timer);
+                            document.getElementById('countdown').innerText = "OTP Expired!";
+                            document.getElementById('verify-btn').classList.add('btn-disabled');
+                            document.getElementById('otp-input').disabled = true;
+                            
+                            // Enable Resend Button
+                            let resendBtn = document.getElementById('resend-btn');
+                            resendBtn.classList.remove('btn-disabled');
+                            resendBtn.innerText = 'Resend OTP';
+                        }
+                    }, 1000);
+                </script>
             <?php endif; ?>
         </div>
     </div>
@@ -396,29 +449,7 @@ function getTrackHtml($images) {
                 }
             });
         }
-
-        // Simple loading state on form submission
-        function showLoading(form, buttonId, isLink = false) {
-            const btn = document.getElementById(buttonId);
-            if (!btn) return;
-            
-            if (isLink) {
-                btn.style.opacity = '0.5';
-                btn.innerText = 'Sending...';
-                return;
-            }
-
-            btn.classList.add('btn-loading');
-            const span = btn.querySelector('span');
-            if (span) {
-                const originalText = span.innerText;
-                span.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Processing...`;
-            }
-        }
     </script>
-    <style>
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-    </style>
-    <script src="../landing/assets/js/main.js?v=2.4"></script>
+    <script src="../landing/assets/js/main.js?v=2.6"></script>
 </body>
 </html>

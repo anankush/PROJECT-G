@@ -26,100 +26,126 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($password !== $confirm_password) {
                 $error = "Passwords do not match.";
             } else {
-            if ($pdo) {
-                try {
-                    // Check if email already exists
-                    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
-                    $stmt->execute([$email]);
-                    
-                    if ($stmt->fetch()) {
-                        $error = "Email address is already in use.";
-                    } else {
-                        // Generate OTP
-                        $otp = rand(100000, 999999);
-                        $_SESSION['signup_otp'] = $otp;
-                        $_SESSION['signup_data'] = [
-                            'name' => $name,
-                            'email' => $email,
-                            'phone' => $phone,
-                            'password' => $password
-                        ];
+                if ($pdo) {
+                    try {
+                        // Check if email already exists
+                        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+                        $stmt->execute([$email]);
                         
-                        // Send Email (Basic implementation)
-                        $subject = "Your Verification OTP - Roshan Ka Tech";
-                        $message = "Hello $name,\n\nYour OTP for registration is: $otp\n\nPlease enter this to complete your sign up.\n\nThanks,\nRoshan Ka Tech";
-                        $headers = "From: noreply@roshankatech.com";
-                        
-                        $mail_status = send_google_mail($email, $subject, $message);
-                        
-                        if ($mail_status === true || $mail_status !== false) {
-                            $_SESSION['signup_step'] = 2;
-                            $step = 2;
-                            $success = "OTP has been sent to your email. Please check your inbox (and spam folder).";
+                        if ($stmt->fetch()) {
+                            $error = "Email address is already in use.";
                         } else {
-                            $error = "Failed to send OTP email. Please check configuration.";
+                            // Generate OTP & Expiry (2 mins)
+                            $otp = rand(100000, 999999);
+                            $expires_at = date('Y-m-d H:i:s', time() + 120);
+                            
+                            // Delete old OTPs for this email to maintain 1 active OTP
+                            $stmt = $pdo->prepare("DELETE FROM otps WHERE email = ? AND type = 'register'");
+                            $stmt->execute([$email]);
+                            
+                            // Insert into Database
+                            $stmt = $pdo->prepare("INSERT INTO otps (email, otp_code, type, expires_at) VALUES (?, ?, 'register', ?)");
+                            $stmt->execute([$email, $otp, $expires_at]);
+                            
+                            $_SESSION['signup_data'] = [
+                                'name' => $name,
+                                'email' => $email,
+                                'phone' => $phone,
+                                'password' => $password
+                            ];
+                            
+                            // Send Email
+                            $subject = "Your Verification OTP - Roshan Ka Tech";
+                            $message = get_email_template($name, $otp);
+                            $mail_status = send_google_mail($email, $subject, $message);
+                            
+                            if ($mail_status !== false) {
+                                $_SESSION['signup_step'] = 2;
+                                $step = 2;
+                                $success = "OTP has been sent to your email. Please check your inbox.";
+                            } else {
+                                $error = "Failed to send OTP email. Please check configuration.";
+                            }
                         }
+                    } catch (PDOException $e) {
+                        $error = "Database error. Did you run the SQL to create the otps table?";
                     }
-                } catch (PDOException $e) {
-                    $error = "Database error. Please try again.";
+                } else {
+                    $error = "Database connection error.";
                 }
-            } else {
-                $error = "Database connection error.";
-            }
             }
         } else {
             $error = "Please fill in all fields.";
         }
     } elseif (isset($_POST['action']) && $_POST['action'] === 'verify_otp') {
         $user_otp = trim($_POST['otp'] ?? '');
+        $data = $_SESSION['signup_data'] ?? [];
+        $email = $data['email'] ?? '';
         
-        if ($user_otp == $_SESSION['signup_otp']) {
-            // OTP matches, insert user
-            $data = $_SESSION['signup_data'];
-            $hash = password_hash($data['password'], PASSWORD_DEFAULT);
-            
+        if ($email) {
             try {
-                $stmt = $pdo->prepare("INSERT INTO users (name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, 'user')");
-                if ($stmt->execute([$data['name'], $data['email'], $data['phone'], $hash])) {
-                    // Auto login
-                    $_SESSION['user_id'] = $pdo->lastInsertId();
-                    $_SESSION['user_name'] = $data['name'];
-                    $_SESSION['user_role'] = 'user';
+                // Verify OTP is correct and NOT expired
+                $stmt = $pdo->prepare("SELECT id FROM otps WHERE email = ? AND otp_code = ? AND type = 'register' AND expires_at >= NOW()");
+                $stmt->execute([$email, $user_otp]);
+                
+                if ($stmt->fetch()) {
+                    // OTP is Valid - Delete it IMMEDIATELY so it can't be reused
+                    $stmt = $pdo->prepare("DELETE FROM otps WHERE email = ? AND type = 'register'");
+                    $stmt->execute([$email]);
                     
-                    // Clear session signup data
-                    unset($_SESSION['signup_step']);
-                    unset($_SESSION['signup_otp']);
-                    unset($_SESSION['signup_data']);
+                    // Proceed to create user account
+                    $hash = password_hash($data['password'], PASSWORD_DEFAULT);
+                    $stmt = $pdo->prepare("INSERT INTO users (name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, 'user')");
                     
-                    header("Location: ../index.php");
-                    exit;
+                    if ($stmt->execute([$data['name'], $data['email'], $data['phone'], $hash])) {
+                        // Auto login
+                        $_SESSION['user_id'] = $pdo->lastInsertId();
+                        $_SESSION['user_name'] = $data['name'];
+                        $_SESSION['user_role'] = 'user';
+                        
+                        // Clear session signup data
+                        unset($_SESSION['signup_step'], $_SESSION['signup_data']);
+                        
+                        header("Location: ../index.php");
+                        exit;
+                    } else {
+                        $error = "Failed to register. Please try again.";
+                    }
                 } else {
-                    $error = "Failed to register. Please try again.";
+                    $error = "Invalid or Expired OTP.";
                 }
             } catch (PDOException $e) {
                 $error = "Database error during registration.";
             }
         } else {
-            $error = "Invalid OTP. Please try again.";
+            $error = "Session expired. Please register again.";
         }
     } elseif (isset($_POST['action']) && $_POST['action'] === 'resend_otp') {
-        $otp = rand(100000, 999999);
-        $_SESSION['signup_otp'] = $otp;
-        $data = $_SESSION['signup_data'];
+        $data = $_SESSION['signup_data'] ?? [];
+        $email = $data['email'] ?? '';
         
-        $subject = "Your New Verification OTP - Roshan Ka Tech";
-        $message = get_email_template($data['name'], $otp);
-        $mail_status = send_google_mail($data['email'], $subject, $message);
-        
-        if ($mail_status === false) {
-            $error = "Failed to resend OTP email.";
-        } else {
-            $success = "A new OTP has been sent to your email.";
+        if ($email) {
+            $otp = rand(100000, 999999);
+            $expires_at = date('Y-m-d H:i:s', time() + 120); // 2 mins
+            
+            // Delete old, insert new
+            $stmt = $pdo->prepare("DELETE FROM otps WHERE email = ? AND type = 'register'");
+            $stmt->execute([$email]);
+            $stmt = $pdo->prepare("INSERT INTO otps (email, otp_code, type, expires_at) VALUES (?, ?, 'register', ?)");
+            $stmt->execute([$email, $otp, $expires_at]);
+            
+            $subject = "Your New Verification OTP - Roshan Ka Tech";
+            $message = get_email_template($data['name'], $otp);
+            $mail_status = send_google_mail($email, $subject, $message);
+            
+            if ($mail_status === false) {
+                $error = "Failed to resend OTP email.";
+            } else {
+                $success = "A new OTP has been sent to your email.";
+            }
         }
     } elseif (isset($_POST['action']) && $_POST['action'] === 'change_details') {
-        unset($_SESSION['signup_step']);
-        unset($_SESSION['signup_otp']);
-        unset($_SESSION['signup_data']);
+        unset($_SESSION['signup_step'], $_SESSION['signup_data']);
         $step = 1;
     }
 }
@@ -137,12 +163,13 @@ if (is_dir($imageDir)) {
     }
 }
 function getTrackHtml($images) {
+    if (empty($images)) return '';
     shuffle($images);
     $html = '';
     foreach($images as $img) {
         $html .= '<img src="' . htmlspecialchars($img) . '" class="floating-bg-card" alt="bg">';
     }
-    return $html . $html . $html . $html;
+    return str_repeat($html, 4);
 }
 ?>
 <!DOCTYPE html>
@@ -152,7 +179,7 @@ function getTrackHtml($images) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Roshan Ka Tech</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../landing/assets/css/style.css?v=2.1">
+    <link rel="stylesheet" href="../landing/assets/css/style.css?v=2.5">
     <style>
         .auth-container {
             min-height: 100vh;
@@ -230,6 +257,22 @@ function getTrackHtml($images) {
             color: var(--primary-hover);
             text-decoration: underline;
         }
+        .countdown-timer {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #d32f2f;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 0, 0, 0.05);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px dashed rgba(211, 47, 47, 0.3);
+        }
+        .btn-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -298,9 +341,11 @@ function getTrackHtml($images) {
                 </div>
             <?php else: ?>
                 <h2>Verify Email</h2>
-                <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 1.5rem;">
                     We've sent a 6-digit OTP to <strong><?= htmlspecialchars($_SESSION['signup_data']['email'] ?? '') ?></strong>.
                 </p>
+                
+                <div class="countdown-timer" id="countdown">02:00</div>
                 
                 <?php if ($success): ?>
                     <div class="success-message"><?= htmlspecialchars($success) ?></div>
@@ -313,9 +358,9 @@ function getTrackHtml($images) {
                     <input type="hidden" name="action" value="verify_otp">
                     <div class="glass-form-group" style="margin-bottom: 2rem;">
                         <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark); text-align: center;">Enter OTP</label>
-                        <input type="text" name="otp" class="glass-select" placeholder="e.g. 123456" style="width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 2px;" required maxlength="6">
+                        <input type="text" name="otp" id="otp-input" class="glass-select" placeholder="e.g. 123456" style="width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 2px;" required maxlength="6">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Verify & Register</button>
+                    <button type="submit" id="verify-btn" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Verify & Register</button>
                 </form>
 
                 <div class="auth-links" style="display: flex; justify-content: space-between; margin-top: 2rem;">
@@ -325,13 +370,35 @@ function getTrackHtml($images) {
                     </form>
                     <form method="POST" style="display: inline;">
                         <input type="hidden" name="action" value="resend_otp">
-                        <button type="submit">Resend OTP</button>
+                        <button type="submit" id="resend-btn" class="btn-disabled">Resend OTP (Wait)</button>
                     </form>
                 </div>
+                
+                <script>
+                    let timeInSecs = 120;
+                    let timer = setInterval(function() {
+                        timeInSecs--;
+                        let m = Math.floor(timeInSecs / 60).toString().padStart(2, '0');
+                        let s = (timeInSecs % 60).toString().padStart(2, '0');
+                        document.getElementById('countdown').innerText = m + ":" + s;
+                        
+                        if (timeInSecs <= 0) {
+                            clearInterval(timer);
+                            document.getElementById('countdown').innerText = "OTP Expired!";
+                            document.getElementById('verify-btn').classList.add('btn-disabled');
+                            document.getElementById('otp-input').disabled = true;
+                            
+                            // Enable Resend Button
+                            let resendBtn = document.getElementById('resend-btn');
+                            resendBtn.classList.remove('btn-disabled');
+                            resendBtn.innerText = 'Resend OTP';
+                        }
+                    }, 1000);
+                </script>
             <?php endif; ?>
         </div>
     </div>
 
-    <script src="../landing/assets/js/main.js?v=2.1"></script>
+    <script src="../landing/assets/js/main.js?v=2.5"></script>
 </body>
 </html>

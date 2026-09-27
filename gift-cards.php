@@ -151,7 +151,8 @@ function getTrackHtml($images) {
                     <ul class="footer-links">
                         <li><a href="how-it-works.php">How It Works</a></li>
                         <li><a href="gift-cards.php">Buy / Sell Gift Cards</a></li>
-                        <li><a href="why-us.php">Why Us</a></li>`n                        <li><a href="dev.php">Developers & Contribution</a></li>
+                        <li><a href="why-us.php">Why Us</a></li>
+                        <li><a href="dev.php">Developers & Contribution</a></li>
                     </ul>
                 </div>
 
@@ -165,7 +166,7 @@ function getTrackHtml($images) {
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2026 <strong>Roshan Ka Tech.</strong> All rights reserved.</p>`n                
+                <p>&copy; 2026 <strong>Roshan Ka Tech.</strong> All rights reserved.</p>
             </div>
         </div>
     </footer>

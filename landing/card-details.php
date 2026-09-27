@@ -83,7 +83,7 @@ function getTrackHtml($images) {
                 <ul class="nav-links">
                     <li><a href="../index.php">Home</a></li>
                     <li><a href="../how-it-works.php">How It Works</a></li>
-                    <li><a href="../index.php#gift-cards">Buy / Sell Gift Cards</a></li>
+                    <li><a href="../gift-cards.php">Buy / Sell Gift Cards</a></li>
                     <li><a href="../why-us.php">Why Us</a></li>
                 </ul>
             </nav>
@@ -247,4 +247,5 @@ function getTrackHtml($images) {
     </script>
 </body>
 </html>
+
 

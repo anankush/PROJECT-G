@@ -37,7 +37,7 @@ function getTrackHtml($images) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#f4f7fb">
-    <title>How It Works | Roshan Ka Tech</title>
+    <title>Gift Cards | Roshan Ka Tech</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,7 +69,7 @@ function getTrackHtml($images) {
     <!-- Header / Navigation -->
     <header class="header">
         <div class="container nav-container">
-            <a href="index.php" class="logo">Roshan Ka Tech</a>
+            <a href="#" class="logo">Roshan Ka Tech</a>
             <nav>
                 <ul class="nav-links">
                     <li><a href="index.php">Home</a></li>
@@ -89,30 +89,38 @@ function getTrackHtml($images) {
         </div>
     </header>
 
-    <!-- How It Works Section -->
-    <section class="section how-it-works" style="padding-top: 12rem; min-height: 80vh;">
+    <!-- Supported Gift Cards Section (Dynamic) -->
+    <section class="section gift-cards" style="padding-top: 12rem; min-height: 80vh;">
         <div class="container">
             <div class="text-center reveal">
-                <h2>How It Works</h2>
-                <p>Three simple steps to buy or sell your gift cards.</p>
+                <h2>Trade Gift Cards</h2>
+                <p>Select your gift card brand below to buy or sell.</p>
             </div>
             
-            <div class="steps-grid reveal">
-                <div class="step">
-                    <span class="step-number">01</span>
-                    <h3>Choose Your Gift Card</h3>
-                    <p>Select the brand of the gift card you want to trade from our supported list.</p>
-                </div>
-                <div class="step">
-                    <span class="step-number">02</span>
-                    <h3>Buy or Sell</h3>
-                    <p>Choose whether to purchase a new card or sell your existing one securely.</p>
-                </div>
-                <div class="step">
-                    <span class="step-number">03</span>
-                    <h3>Complete Transaction</h3>
-                    <p>Get your card details instantly or receive payment for your sale.</p>
-                </div>
+            <div class="cards-grid reveal">
+                <?php if (empty($giftCards)): ?>
+                    
+                    <!-- Empty State: Displayed when no active gift cards exist in the database -->
+                    <div class="empty-state glass-panel">
+                        <h3>Gift cards will appear here soon.</h3>
+                        <p>We are currently updating our inventory. Please check back later.</p>
+                    </div>
+
+                <?php else: ?>
+                    
+                    <!-- Dynamic Loop: Display active gift cards -->
+                    <?php foreach ($giftCards as $card): ?>
+                        <div class="card">
+                            <div class="card-img-wrapper">
+                                <img src="<?= htmlspecialchars($card['image_path'] ?? '') ?>" alt="<?= htmlspecialchars($card['brand_name']) ?> Gift Card" loading="lazy">
+                            </div>
+                            <h3><?= htmlspecialchars($card['brand_name']) ?></h3>
+                            
+                            <a href="landing/card-details.php?id=<?= htmlspecialchars($card['id']) ?>" class="btn btn-primary" style="margin-top: 1rem;">Buy / Sell Options</a>
+                        </div>
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
             </div>
         </div>
     </section>

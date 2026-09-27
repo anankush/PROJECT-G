@@ -74,7 +74,7 @@ function getTrackHtml($images) {
                 <ul class="nav-links">
                     <li><a href="index.php">Home</a></li>
                     <li><a href="how-it-works.php">How It Works</a></li>
-                    <li><a href="index.php#gift-cards">Buy / Sell Gift Cards</a></li>
+                    <li><a href="gift-cards.php">Buy / Sell Gift Cards</a></li>
                     <li><a href="why-us.php">Why Us</a></li>
                     <li><a href="contact.php">Contact</a></li>
                 </ul>
@@ -127,7 +127,7 @@ function getTrackHtml($images) {
                     <h3 class="mb-4">Navigation</h3>
                     <ul class="footer-links">
                         <li><a href="how-it-works.php">How It Works</a></li>
-                        <li><a href="index.php#gift-cards">Buy / Sell Gift Cards</a></li>
+                        <li><a href="gift-cards.php">Buy / Sell Gift Cards</a></li>
                         <li><a href="why-us.php">Why Us</a></li>
                     </ul>
                 </div>
@@ -151,6 +151,7 @@ function getTrackHtml($images) {
     <script src="landing/assets/js/main.js?v=2.1"></script>
 </body>
 </html>
+
 
 
 

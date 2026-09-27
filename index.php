@@ -1,7 +1,7 @@
 <?php
 // Centralized Database and Logic
-require_once __DIR__ . '/../private/db.php';
-require_once __DIR__ . '/../private/giftcard_functions.php';
+require_once __DIR__ . '/private/db.php';
+require_once __DIR__ . '/private/giftcard_functions.php';
 
 // Fetch active gift cards from the database dynamically
 $giftCards = getActiveGiftCards($pdo);
@@ -19,7 +19,7 @@ $giftCards = getActiveGiftCards($pdo);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="landing/assets/css/style.css">
 </head>
 <body>
 
@@ -224,6 +224,6 @@ $giftCards = getActiveGiftCards($pdo);
     </footer>
 
     <!-- Custom JS -->
-    <script src="assets/js/main.js"></script>
+    <script src="landing/assets/js/main.js"></script>
 </body>
 </html>

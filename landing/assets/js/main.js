@@ -1,20 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Seamless Infinite Diagonal Marquee Logic
     const bgContainer = document.querySelector('.floating-bg-container');
-    const bgTrack = document.querySelector('.bg-marquee-track');
+    const bgTracks = document.querySelectorAll('.bg-marquee-track');
     
-    if (bgContainer && bgTrack) {
+    if (bgContainer && bgTracks.length > 0) {
         // Randomize the slant angle (e.g., -30deg for bottom-left to top-right, 30deg for top-left to bottom-right)
         const angles = [-35, 35, -25, 25];
         const randomAngle = angles[Math.floor(Math.random() * angles.length)];
         
-        // Randomize direction (normal or reverse)
+        // Pick a base direction
         const directions = ['normal', 'reverse'];
-        const randomDir = directions[Math.floor(Math.random() * directions.length)];
+        const baseDir = directions[Math.floor(Math.random() * directions.length)];
         
-        // Apply to elements
+        // Apply rotation to the container
         bgContainer.style.transform = `rotate(${randomAngle}deg)`;
-        bgTrack.style.animationDirection = randomDir;
+        
+        // Apply alternating directions to the tracks
+        bgTracks.forEach((track, index) => {
+            if (index % 2 === 0) {
+                // Track 0 and 2 (Top and Bottom) go the base direction
+                track.style.animationDirection = baseDir;
+            } else {
+                // Track 1 (Middle) goes the opposite direction
+                track.style.animationDirection = (baseDir === 'normal') ? 'reverse' : 'normal';
+            }
+        });
     }
 
     // Scroll Reveal Animation using Intersection Observer

@@ -65,8 +65,10 @@ img {
   z-index: 0;
   pointer-events: none;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 8rem; /* Vertical spacing between tracks */
   /* Rotation will be applied via JS to ensure random diagonals */
 }
 

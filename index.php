@@ -20,8 +20,15 @@ if (is_dir($imageDir)) {
     }
 }
 
-// Shuffle the images so the order is random on every page load
-shuffle($bgImages);
+// Function to generate a randomly shuffled HTML track for seamless loop
+function getTrackHtml($images) {
+    shuffle($images);
+    $html = '';
+    foreach($images as $img) {
+        $html .= '<img src="' . htmlspecialchars($img) . '" class="floating-bg-card" alt="floating bg">';
+    }
+    return $html . $html; // Duplicate for seamless infinite marquee
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,22 +44,16 @@ shuffle($bgImages);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="landing/assets/css/style.css?v=1.7">
+    <link rel="stylesheet" href="landing/assets/css/style.css?v=1.8">
 </head>
 <body>
 
     <!-- Dynamic Floating Background Cards -->
     <div class="floating-bg-container">
-        <div class="bg-marquee-track">
-            <!-- First Set -->
-            <?php foreach($bgImages as $bgImg): ?>
-                <img src="<?= htmlspecialchars($bgImg) ?>" class="floating-bg-card" alt="floating bg">
-            <?php endforeach; ?>
-            <!-- Cloned Set for Seamless Infinite Marquee -->
-            <?php foreach($bgImages as $bgImg): ?>
-                <img src="<?= htmlspecialchars($bgImg) ?>" class="floating-bg-card" alt="floating bg">
-            <?php endforeach; ?>
-        </div>
+        <!-- 3 Parallel Tracks that fill the screen vertically -->
+        <div class="bg-marquee-track track-top"><?= getTrackHtml($bgImages) ?></div>
+        <div class="bg-marquee-track track-middle"><?= getTrackHtml($bgImages) ?></div>
+        <div class="bg-marquee-track track-bottom"><?= getTrackHtml($bgImages) ?></div>
     </div>
 
     <!-- Background Glassmorphism Blobs -->
@@ -256,6 +257,6 @@ shuffle($bgImages);
     </footer>
 
     <!-- Custom JS -->
-    <script src="landing/assets/js/main.js?v=1.7"></script>
+    <script src="landing/assets/js/main.js?v=1.8"></script>
 </body>
 </html>

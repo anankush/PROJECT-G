@@ -804,20 +804,26 @@ p { color: var(--text-light); }
     top: 100%;
     left: 0;
     width: 100%;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     flex-direction: column;
     padding: 1.5rem;
     gap: 1.5rem;
     border-radius: 20px;
-    border: var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     margin-top: 1rem;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
     transition: var(--transition);
+  }
+
+  .nav-links a {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    font-weight: 600;
   }
 
   .nav-links.active {

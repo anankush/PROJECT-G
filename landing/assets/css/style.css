@@ -72,10 +72,10 @@ img {
 
 .bg-marquee-track {
   display: flex;
-  gap: 2rem; /* Tight sequence without massive gaps */
+  gap: 4rem; /* Safe, distinct gap to ensure no overlap */
   width: max-content;
   will-change: transform;
-  animation: bgMarqueeScroll 50s linear infinite;
+  animation: bgMarqueeScroll 30s linear infinite; /* Slightly faster animation */
 }
 
 .floating-bg-card {

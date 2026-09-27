@@ -32,7 +32,13 @@ function send_google_mail($to, $subject, $body) {
         $headers = "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
         $headers .= "From: Roshan Ka Tech <noreply@roshankatech.com>\r\n";
-        return @mail($to, $subject, $body, $headers);
+        $success = @mail($to, $subject, $body, $headers);
+        if (!$success) {
+            // Local fallback logic to allow testing without email server
+            @file_put_contents(__DIR__ . '/local_otp.txt', "To: $to\nSubject: $subject\n\n$body\n\n");
+            return "Empty Google Script URL. If testing locally, check private/local_otp.txt for your OTP.";
+        }
+        return true;
     }
     
     // Prepare data for Google Apps Script
@@ -50,7 +56,7 @@ function send_google_mail($to, $subject, $body) {
     
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_POSTREDIR, 3); // Keep POST method on Google 302 redirects
+    // Removed CURLOPT_POSTREDIR because Google's 302 redirect REQUIRES a GET request to fetch the result. Force-keeping POST causes 405 Method Not Allowed.
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     
     $response = curl_exec($ch);
@@ -61,8 +67,12 @@ function send_google_mail($to, $subject, $body) {
     $log_msg = date('[Y-m-d H:i:s] ') . "URL: " . substr($google_script_url, 0, 30) . "... | cURL Error: $curl_error | Response: $response\n";
     @file_put_contents(__DIR__ . '/mail_debug.log', $log_msg, FILE_APPEND);
     
-    if ($curl_error || stripos($response, 'Error') !== false) {
-        return false;
+    if ($curl_error) {
+        return "cURL Error: " . $curl_error;
+    }
+    
+    if (stripos($response, 'Error') !== false || stripos($response, 'Exception') !== false) {
+        return "Google Script Error: " . strip_tags($response);
     }
     
     return true;

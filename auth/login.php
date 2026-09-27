@@ -54,12 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $message = get_email_template($user['name'], $otp);
                             $mail_status = send_google_mail($user['email'], $subject, $message);
                             
-                            if ($mail_status !== false) {
+                            if ($mail_status === true) {
                                 $_SESSION['login_step'] = 2;
                                 $step = 2;
                                 $success = "OTP has been sent to your registered email address.";
                             } else {
-                                $error = "Failed to send OTP email. Please check configuration.";
+                                $error = "Failed to send OTP: " . (is_string($mail_status) ? $mail_status : "Unknown configuration error.");
                             }
                         }
                     } else {
@@ -127,8 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = get_email_template($u['name'], $otp);
             $mail_status = send_google_mail($email, $subject, $message);
             
-            if ($mail_status === false) {
-                $error = "Failed to resend OTP email.";
+            if ($mail_status !== true) {
+                $error = "Failed to resend OTP: " . (is_string($mail_status) ? $mail_status : "Unknown error.");
             } else {
                 $success = "A new OTP has been sent to your registered email address.";
             }

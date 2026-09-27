@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <g transform="translate(10, 5)">
+    <!-- Play Triangle Placeholder -->
+    <path d="M 10 5 L 10 45 L 45 25 Z" fill="#3B82F6" />
+    <path d="M 10 5 L 25 25 L 10 45 Z" fill="#10B981" />
+    <path d="M 10 5 L 45 25 L 30 18 Z" fill="#EF4444" />
+    <path d="M 10 45 L 45 25 L 30 32 Z" fill="#F59E0B" />
+    <text x="60" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#374151">Google Play</text>
+  </g>
+</svg>

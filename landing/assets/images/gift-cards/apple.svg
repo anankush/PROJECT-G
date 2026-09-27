@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <g transform="translate(40, 10)">
+    <!-- Apple-like Logo Placeholder -->
+    <circle cx="20" cy="25" r="15" fill="#333333" />
+    <circle cx="28" cy="25" r="12" fill="#ffffff" />
+    <ellipse cx="20" cy="5" rx="5" ry="8" fill="#333333" transform="rotate(30 20 5)" />
+    <text x="50" y="32" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#333333">Apple</text>
+  </g>
+</svg>
